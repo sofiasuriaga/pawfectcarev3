@@ -72,4 +72,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'pawfectcare-8d21c.firebasestorage.app',
     iosBundleId: 'com.mycompany.pawfectcare',
   );
+
 }
