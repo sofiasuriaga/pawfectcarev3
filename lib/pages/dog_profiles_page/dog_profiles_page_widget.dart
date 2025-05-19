@@ -1,3 +1,5 @@
+import 'package:paw_fect_care/utils/dog_profiles_filter_utils.dart';
+
 import '/backend/schema/structs/index.dart';
 import '/backend/supabase/supabase.dart';
 import '/components/add_new_doggo_component/add_new_doggo_component_widget.dart';
@@ -30,6 +32,7 @@ class _DogProfilesPageWidgetState extends State<DogProfilesPageWidget> {
   late DogProfilesPageModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  String _searchQueryDoggos = '';
 
   @override
   void initState() {
@@ -39,13 +42,20 @@ class _DogProfilesPageWidgetState extends State<DogProfilesPageWidget> {
     _model.searchDoggosTextController ??= TextEditingController();
     _model.searchDoggosFocusNode ??= FocusNode();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
+    _model.searchDoggosTextController!.addListener(() {
+      if (mounted) {
+        setState(() {
+          _searchQueryDoggos = _model.searchDoggosTextController!.text;
+        });
+      }
+    });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override
   void dispose() {
     _model.dispose();
-
     super.dispose();
   }
 
@@ -79,7 +89,7 @@ class _DogProfilesPageWidgetState extends State<DogProfilesPageWidget> {
                 children: [
                   Padding(
                     padding:
-                        EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
+                    EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
                     child: Row(
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -125,7 +135,7 @@ class _DogProfilesPageWidgetState extends State<DogProfilesPageWidget> {
                   ),
                   Padding(
                     padding:
-                        EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
+                    EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
                     child: Container(
                       width: 355.0,
                       constraints: BoxConstraints(
@@ -139,526 +149,308 @@ class _DogProfilesPageWidgetState extends State<DogProfilesPageWidget> {
                           topRight: Radius.circular(16.0),
                         ),
                       ),
-                      child: Stack(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
                         children: [
-                          SingleChildScrollView(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                if ((FFAppState().usertype == 'Admin') ||
-                                    (FFAppState().usertype == 'Owner'))
-                                  Align(
-                                    alignment: AlignmentDirectional(1.0, -1.0),
-                                    child: Builder(
-                                      builder: (context) => Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            0.0, 10.0, 15.0, 5.0),
-                                        child: InkWell(
-                                          splashColor: Colors.transparent,
-                                          focusColor: Colors.transparent,
-                                          hoverColor: Colors.transparent,
-                                          highlightColor: Colors.transparent,
-                                          onTap: () async {
-                                            await showDialog(
-                                              context: context,
-                                              builder: (dialogContext) {
-                                                return Dialog(
-                                                  elevation: 0,
-                                                  insetPadding: EdgeInsets.zero,
-                                                  backgroundColor:
-                                                      Colors.transparent,
-                                                  alignment:
-                                                      AlignmentDirectional(
-                                                              0.0, 0.0)
-                                                          .resolve(
-                                                              Directionality.of(
-                                                                  context)),
-                                                  child: GestureDetector(
-                                                    onTap: () {
-                                                      FocusScope.of(
-                                                              dialogContext)
-                                                          .unfocus();
-                                                      FocusManager
-                                                          .instance.primaryFocus
-                                                          ?.unfocus();
-                                                    },
-                                                    child:
-                                                        AddNewDoggoComponentWidget(),
-                                                  ),
-                                                );
+                          if ((FFAppState().usertype == 'Admin') ||
+                              (FFAppState().usertype == 'Owner'))
+                            Align(
+                              alignment: AlignmentDirectional(1.0, -1.0),
+                              child: Builder(
+                                builder: (context) => Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      0.0, 10.0, 15.0, 5.0),
+                                  child: InkWell(
+                                    splashColor: Colors.transparent,
+                                    focusColor: Colors.transparent,
+                                    hoverColor: Colors.transparent,
+                                    highlightColor: Colors.transparent,
+                                    onTap: () async {
+                                      await showDialog(
+                                        context: context,
+                                        builder: (dialogContext) {
+                                          return Dialog(
+                                            elevation: 0,
+                                            insetPadding: EdgeInsets.zero,
+                                            backgroundColor:
+                                            Colors.transparent,
+                                            alignment: AlignmentDirectional(
+                                                0.0, 0.0)
+                                                .resolve(
+                                                Directionality.of(context)),
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                FocusScope.of(dialogContext).unfocus();
+                                                FocusManager.instance.primaryFocus?.unfocus();
                                               },
-                                            );
-                                          },
-                                          child: Icon(
-                                            Icons.add_box,
-                                            color: Color(0xFFFD8205),
-                                            size: 30.0,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                Container(
-                                  width: double.infinity,
-                                  child: TextFormField(
-                                    controller:
-                                        _model.searchDoggosTextController,
-                                    focusNode: _model.searchDoggosFocusNode,
-                                    autofocus: false,
-                                    obscureText: false,
-                                    decoration: InputDecoration(
-                                      labelText: 'Search',
-                                      labelStyle: FlutterFlowTheme.of(context)
-                                          .labelLarge
-                                          .override(
-                                            font: GoogleFonts.plusJakartaSans(
-                                              fontWeight: FontWeight.w500,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .labelLarge
-                                                      .fontStyle,
+                                              child: AddNewDoggoComponentWidget(),
                                             ),
-                                            color: Color(0xFF57636C),
-                                            fontSize: 16.0,
-                                            letterSpacing: 0.0,
-                                            fontWeight: FontWeight.w500,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .labelLarge
-                                                    .fontStyle,
-                                          ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Color(0xFFF1F4F8),
-                                          width: 2.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Color(0xFF4B39EF),
-                                          width: 2.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                      ),
-                                      errorBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Color(0xFFE0E3E7),
-                                          width: 2.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                      ),
-                                      focusedErrorBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Color(0xFFE0E3E7),
-                                          width: 2.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                      ),
-                                      filled: true,
-                                      fillColor: Color(0xFFF1F4F8),
+                                          );
+                                        },
+                                      );
+                                    },
+                                    child: Icon(
+                                      Icons.add_box,
+                                      color: Color(0xFFFD8205),
+                                      size: 30.0,
                                     ),
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyLarge
-                                        .override(
-                                          font: GoogleFonts.plusJakartaSans(
-                                            fontWeight: FontWeight.w500,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .bodyLarge
-                                                    .fontStyle,
-                                          ),
-                                          color: Color(0xFF101213),
-                                          fontSize: 16.0,
-                                          letterSpacing: 0.0,
-                                          fontWeight: FontWeight.w500,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyLarge
-                                                  .fontStyle,
-                                        ),
-                                    keyboardType: TextInputType.emailAddress,
-                                    validator: _model
-                                        .searchDoggosTextControllerValidator
-                                        .asValidator(context),
                                   ),
                                 ),
-                                FutureBuilder<List<DogsRow>>(
-                                  future: DogsTable().queryRows(
-                                    queryFn: (q) =>
-                                        q.order('dog_name', ascending: true),
+                              ),
+                            ),
+                          Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(15.0, 5.0, 15.0, 10.0),
+                            child: Container(
+                              width: double.infinity,
+                              child: TextFormField(
+                                controller: _model.searchDoggosTextController,
+                                focusNode: _model.searchDoggosFocusNode,
+                                autofocus: false,
+                                obscureText: false,
+                                decoration: InputDecoration(
+                                  hintText: 'Search doggos...',
+                                  hintStyle: FlutterFlowTheme.of(context)
+                                      .labelMedium
+                                      .override(
+                                    fontFamily: FlutterFlowTheme.of(context).labelMediumFamily,
+                                    color: FlutterFlowTheme.of(context).secondaryText,
+                                    useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).labelMediumFamily),
                                   ),
-                                  builder: (context, snapshot) {
-                                    // Customize what your widget looks like when it's loading.
-                                    if (!snapshot.hasData) {
-                                      return Center(
-                                        child: SizedBox(
-                                          width: 50.0,
-                                          height: 50.0,
-                                          child: CircularProgressIndicator(
-                                            valueColor:
-                                                AlwaysStoppedAnimation<Color>(
-                                              FlutterFlowTheme.of(context)
-                                                  .primary,
-                                            ),
-                                          ),
+                                  prefixIcon: Icon(
+                                    Icons.search,
+                                    color: FlutterFlowTheme.of(context).secondaryText,
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: FlutterFlowTheme.of(context).alternate,
+                                      width: 2.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(12.0),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: FlutterFlowTheme.of(context).primary,
+                                      width: 2.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(12.0),
+                                  ),
+                                  filled: true,
+                                  fillColor: FlutterFlowTheme.of(context).secondaryBackground,
+                                  contentPadding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 0.0, 0.0),
+                                ),
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                  fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
+                                  color: FlutterFlowTheme.of(context).primaryText,
+                                  useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyMediumFamily),
+                                ),
+                                keyboardType: TextInputType.text,
+                                validator: _model.searchDoggosTextControllerValidator.asValidator(context),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: FutureBuilder<List<DogsRow>>(
+                              future: DogsTable().queryRows(
+                                queryFn: (q) =>
+                                    q.order('dog_name', ascending: true),
+                              ),
+                              builder: (context, snapshot) {
+                                if (!snapshot.hasData) {
+                                  return Center(
+                                    child: SizedBox(
+                                      width: 50.0,
+                                      height: 50.0,
+                                      child: CircularProgressIndicator(
+                                        valueColor:
+                                        AlwaysStoppedAnimation<Color>(
+                                          FlutterFlowTheme.of(context).primary,
                                         ),
-                                      );
-                                    }
-                                    List<DogsRow> listViewDogsRowList =
-                                        snapshot.data!;
+                                      ),
+                                    ),
+                                  );
+                                }
+                                List<DogsRow> allDogsRowList = snapshot.data!;
+                                final List<DogsRow> filteredDogsRowList =
+                                DogProfilesFilterUtils.filterDoggos(
+                                  allDoggos: allDogsRowList,
+                                  searchQuery: _searchQueryDoggos,
+                                );
 
-                                    return ListView.builder(
-                                      padding: EdgeInsets.zero,
-                                      shrinkWrap: true,
-                                      scrollDirection: Axis.vertical,
-                                      itemCount: listViewDogsRowList.length,
-                                      itemBuilder: (context, listViewIndex) {
-                                        final listViewDogsRow =
-                                            listViewDogsRowList[listViewIndex];
-                                        return Column(
-                                          mainAxisSize: MainAxisSize.max,
-                                          children: [
-                                            if ((FFAppState().usertype ==
-                                                    'Admin') ||
-                                                (FFAppState().usertype ==
-                                                    'Owner'))
-                                              Align(
-                                                alignment: AlignmentDirectional(
-                                                    1.0, -1.0),
-                                                child: Builder(
-                                                  builder: (context) => Padding(
-                                                    padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(0.0, 10.0,
-                                                                15.0, 0.0),
-                                                    child: InkWell(
-                                                      splashColor:
-                                                          Colors.transparent,
-                                                      focusColor:
-                                                          Colors.transparent,
-                                                      hoverColor:
-                                                          Colors.transparent,
-                                                      highlightColor:
-                                                          Colors.transparent,
-                                                      onTap: () async {
-                                                        await showDialog(
-                                                          context: context,
-                                                          builder:
-                                                              (dialogContext) {
-                                                            return Dialog(
-                                                              elevation: 0,
-                                                              insetPadding:
-                                                                  EdgeInsets
-                                                                      .zero,
-                                                              backgroundColor:
-                                                                  Colors
-                                                                      .transparent,
-                                                              alignment: AlignmentDirectional(
-                                                                      0.0, 0.0)
-                                                                  .resolve(
-                                                                      Directionality.of(
-                                                                          context)),
-                                                              child:
-                                                                  GestureDetector(
-                                                                onTap: () {
-                                                                  FocusScope.of(
-                                                                          dialogContext)
-                                                                      .unfocus();
-                                                                  FocusManager
-                                                                      .instance
-                                                                      .primaryFocus
-                                                                      ?.unfocus();
-                                                                },
-                                                                child:
-                                                                    DeleteDogComponentWidget(
-                                                                  id: listViewDogsRow
-                                                                      .id,
-                                                                ),
-                                                              ),
-                                                            );
-                                                          },
-                                                        );
-                                                      },
-                                                      child: Icon(
-                                                        Icons.delete_sharp,
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .error,
-                                                        size: 30.0,
-                                                      ),
+                                if (filteredDogsRowList.isEmpty && _searchQueryDoggos.isNotEmpty) {
+                                  return Padding(
+                                      padding: const EdgeInsets.all(16.0),
+                                      child: Center(child: Text('No doggos found for "$_searchQueryDoggos"', style: FlutterFlowTheme.of(context).bodyMedium,))
+                                  );
+                                } else if (filteredDogsRowList.isEmpty) {
+                                  return Padding(
+                                      padding: const EdgeInsets.all(16.0),
+                                      child: Center(child: Text('No doggos to display.', style: FlutterFlowTheme.of(context).bodyMedium,))
+                                  );
+                                }
+
+                                return ListView.builder(
+                                  padding: EdgeInsets.zero,
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.vertical,
+                                  itemCount: filteredDogsRowList.length,
+                                  itemBuilder: (context, listViewIndex) {
+                                    final listViewDogsRow =
+                                    filteredDogsRowList[listViewIndex];
+                                    return Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(15.0, 0.0, 15.0, 10.0),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          if ((FFAppState().usertype == 'Admin') || (FFAppState().usertype == 'Owner'))
+                                            Align(
+                                              alignment: AlignmentDirectional(1.0, -1.0),
+                                              child: Builder(
+                                                builder: (context) => Padding(
+                                                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 5.0, 0.0, 0.0),
+                                                  child: InkWell(
+                                                    splashColor: Colors.transparent,
+                                                    focusColor: Colors.transparent,
+                                                    hoverColor: Colors.transparent,
+                                                    highlightColor: Colors.transparent,
+                                                    onTap: () async {
+                                                      await showDialog(
+                                                        context: context,
+                                                        builder: (dialogContext) {
+                                                          return Dialog(
+                                                            elevation: 0,
+                                                            insetPadding: EdgeInsets.zero,
+                                                            backgroundColor: Colors.transparent,
+                                                            alignment: AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                            child: GestureDetector(
+                                                              onTap: () {
+                                                                FocusScope.of(dialogContext).unfocus();
+                                                                FocusManager.instance.primaryFocus?.unfocus();
+                                                              },
+                                                              child: DeleteDogComponentWidget(id: listViewDogsRow.id),
+                                                            ),
+                                                          );
+                                                        },
+                                                      );
+                                                    },
+                                                    child: Icon(
+                                                      Icons.delete_sharp,
+                                                      color: FlutterFlowTheme.of(context).error,
+                                                      size: 24.0,
                                                     ),
                                                   ),
                                                 ),
                                               ),
-                                            Builder(
-                                              builder: (context) => Padding(
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        0.0, 10.0, 0.0, 5.0),
-                                                child: InkWell(
-                                                  splashColor:
-                                                      Colors.transparent,
-                                                  focusColor:
-                                                      Colors.transparent,
-                                                  hoverColor:
-                                                      Colors.transparent,
-                                                  highlightColor:
-                                                      Colors.transparent,
-                                                  onTap: () async {
-                                                    await showDialog(
-                                                      context: context,
-                                                      builder: (dialogContext) {
-                                                        return Dialog(
-                                                          elevation: 0,
-                                                          insetPadding:
-                                                              EdgeInsets.zero,
-                                                          backgroundColor:
-                                                              Colors
-                                                                  .transparent,
-                                                          alignment: AlignmentDirectional(
-                                                                  0.0, 0.0)
-                                                              .resolve(
-                                                                  Directionality.of(
-                                                                      context)),
-                                                          child:
-                                                              GestureDetector(
-                                                            onTap: () {
-                                                              FocusScope.of(
-                                                                      dialogContext)
-                                                                  .unfocus();
-                                                              FocusManager
-                                                                  .instance
-                                                                  .primaryFocus
-                                                                  ?.unfocus();
-                                                            },
-                                                            child:
-                                                                ViewDoggoProfileComponentWidget(
-                                                              dog:
-                                                                  listViewDogsRow,
-                                                            ),
-                                                          ),
-                                                        );
-                                                      },
+                                            ),
+                                          Builder(
+                                            builder: (context) => InkWell(
+                                              splashColor: Colors.transparent,
+                                              focusColor: Colors.transparent,
+                                              hoverColor: Colors.transparent,
+                                              highlightColor: Colors.transparent,
+                                              onTap: () async {
+                                                await showDialog(
+                                                  context: context,
+                                                  builder: (dialogContext) {
+                                                    return Dialog(
+                                                      elevation: 0,
+                                                      insetPadding: EdgeInsets.zero,
+                                                      backgroundColor: Colors.transparent,
+                                                      alignment: AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                      child: GestureDetector(
+                                                        onTap: () {
+                                                          FocusScope.of(dialogContext).unfocus();
+                                                          FocusManager.instance.primaryFocus?.unfocus();
+                                                        },
+                                                        child: ViewDoggoProfileComponentWidget(dog: listViewDogsRow),
+                                                      ),
                                                     );
                                                   },
-                                                  child: Container(
-                                                    width: double.infinity,
-                                                    height: 104.73,
-                                                    decoration: BoxDecoration(
-                                                      color: Colors.white,
-                                                      boxShadow: [
-                                                        BoxShadow(
-                                                          blurRadius: 4.0,
-                                                          color:
-                                                              Color(0x33000000),
-                                                          offset: Offset(
-                                                            0.0,
-                                                            2.0,
-                                                          ),
-                                                        )
-                                                      ],
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              16.0),
-                                                    ),
-                                                    child: Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.max,
-                                                      children: [
-                                                        Align(
-                                                          alignment:
-                                                              AlignmentDirectional(
-                                                                  0.0, -0.47),
-                                                          child: Padding(
-                                                            padding:
-                                                                EdgeInsetsDirectional
-                                                                    .fromSTEB(
-                                                                        30.0,
-                                                                        0.0,
-                                                                        0.0,
-                                                                        5.0),
-                                                            child: Row(
-                                                              mainAxisSize:
-                                                                  MainAxisSize
-                                                                      .max,
-                                                              children: [
-                                                                Align(
-                                                                  alignment:
-                                                                      AlignmentDirectional(
-                                                                          -0.76,
-                                                                          -1.31),
-                                                                  child:
-                                                                      Padding(
-                                                                    padding: EdgeInsetsDirectional
-                                                                        .fromSTEB(
-                                                                            0.0,
-                                                                            5.0,
-                                                                            0.0,
-                                                                            0.0),
-                                                                    child:
-                                                                        Container(
-                                                                      width:
-                                                                          80.0,
-                                                                      height:
-                                                                          80.0,
-                                                                      clipBehavior:
-                                                                          Clip.antiAlias,
-                                                                      decoration:
-                                                                          BoxDecoration(
-                                                                        shape: BoxShape
-                                                                            .circle,
-                                                                      ),
-                                                                      child: Image
-                                                                          .network(
-                                                                        listViewDogsRow.dogImageUrl != null &&
-                                                                                listViewDogsRow.dogImageUrl != ''
-                                                                            ? listViewDogsRow.dogImageUrl!
-                                                                            : 'https://images.unsplash.com/photo-1531969179221-3946e6b5a5e7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NTYyMDF8MHwxfHNlYXJjaHwxfHx0ZWF8ZW58MHx8fHwxNzQ2OTYzMTE5fDA&ixlib=rb-4.1.0&q=80&w=1080',
-                                                                        fit: BoxFit
-                                                                            .cover,
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                                Padding(
-                                                                  padding: EdgeInsetsDirectional
-                                                                      .fromSTEB(
-                                                                          10.0,
-                                                                          10.0,
-                                                                          10.0,
-                                                                          0.0),
-                                                                  child: Column(
-                                                                    mainAxisSize:
-                                                                        MainAxisSize
-                                                                            .max,
-                                                                    crossAxisAlignment:
-                                                                        CrossAxisAlignment
-                                                                            .start,
-                                                                    children: [
-                                                                      Row(
-                                                                        mainAxisSize:
-                                                                            MainAxisSize.max,
-                                                                        children: [
-                                                                          Text(
-                                                                            valueOrDefault<String>(
-                                                                              listViewDogsRow.dogName,
-                                                                              'Tony',
-                                                                            ),
-                                                                            style: FlutterFlowTheme.of(context).titleLarge.override(
-                                                                                  font: GoogleFonts.interTight(
-                                                                                    fontWeight: FlutterFlowTheme.of(context).titleLarge.fontWeight,
-                                                                                    fontStyle: FlutterFlowTheme.of(context).titleLarge.fontStyle,
-                                                                                  ),
-                                                                                  color: Colors.black,
-                                                                                  letterSpacing: 0.0,
-                                                                                  fontWeight: FlutterFlowTheme.of(context).titleLarge.fontWeight,
-                                                                                  fontStyle: FlutterFlowTheme.of(context).titleLarge.fontStyle,
-                                                                                ),
-                                                                          ),
-                                                                          Padding(
-                                                                            padding: EdgeInsetsDirectional.fromSTEB(
-                                                                                5.0,
-                                                                                0.0,
-                                                                                0.0,
-                                                                                10.0),
-                                                                            child:
-                                                                                Text(
-                                                                              valueOrDefault<String>(
-                                                                                listViewDogsRow.dogGender,
-                                                                                'Female',
-                                                                              ),
-                                                                              style: FlutterFlowTheme.of(context).labelSmall.override(
-                                                                                    font: GoogleFonts.inter(
-                                                                                      fontWeight: FontWeight.w600,
-                                                                                      fontStyle: FlutterFlowTheme.of(context).labelSmall.fontStyle,
-                                                                                    ),
-                                                                                    fontSize: 12.0,
-                                                                                    letterSpacing: 0.0,
-                                                                                    fontWeight: FontWeight.w600,
-                                                                                    fontStyle: FlutterFlowTheme.of(context).labelSmall.fontStyle,
-                                                                                  ),
-                                                                            ),
-                                                                          ),
-                                                                        ],
-                                                                      ),
-                                                                      Padding(
-                                                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                                                            0.0,
-                                                                            10.0,
-                                                                            0.0,
-                                                                            0.0),
-                                                                        child:
-                                                                            Column(
-                                                                          mainAxisSize:
-                                                                              MainAxisSize.max,
-                                                                          mainAxisAlignment:
-                                                                              MainAxisAlignment.start,
-                                                                          crossAxisAlignment:
-                                                                              CrossAxisAlignment.center,
-                                                                          children: [
-                                                                            Text(
-                                                                              valueOrDefault<String>(
-                                                                                functions.calculateAgeFromBirthdayString(listViewDogsRow.dogBirthday!),
-                                                                                '3',
-                                                                              ),
-                                                                              style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                    font: GoogleFonts.inter(
-                                                                                      fontWeight: FlutterFlowTheme.of(context).bodyMedium.fontWeight,
-                                                                                      fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                                    ),
-                                                                                    color: FlutterFlowTheme.of(context).success,
-                                                                                    fontSize: 12.0,
-                                                                                    letterSpacing: 0.0,
-                                                                                    fontWeight: FlutterFlowTheme.of(context).bodyMedium.fontWeight,
-                                                                                    fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                                  ),
-                                                                            ),
-                                                                            Text(
-                                                                              valueOrDefault<String>(
-                                                                                listViewDogsRow.dogBirthday,
-                                                                                '-',
-                                                                              ),
-                                                                              style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                    font: GoogleFonts.inter(
-                                                                                      fontWeight: FlutterFlowTheme.of(context).bodyMedium.fontWeight,
-                                                                                      fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                                    ),
-                                                                                    color: FlutterFlowTheme.of(context).success,
-                                                                                    fontSize: 12.0,
-                                                                                    letterSpacing: 0.0,
-                                                                                    fontWeight: FlutterFlowTheme.of(context).bodyMedium.fontWeight,
-                                                                                    fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                                  ),
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
+                                                );
+                                              },
+                                              child: Container(
+                                                width: double.infinity,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      blurRadius: 4.0,
+                                                      color: Color(0x33000000),
+                                                      offset: Offset(0.0, 2.0),
+                                                    )
+                                                  ],
+                                                  borderRadius: BorderRadius.circular(16.0),
+                                                ),
+                                                child: Padding(
+                                                  padding: EdgeInsets.all(12.0),
+                                                  child: Row(
+                                                    mainAxisSize: MainAxisSize.max,
+                                                    children: [
+                                                      Container(
+                                                        width: 80.0,
+                                                        height: 80.0,
+                                                        clipBehavior: Clip.antiAlias,
+                                                        decoration: BoxDecoration(shape: BoxShape.circle),
+                                                        child: Image.network(
+                                                          listViewDogsRow.dogImageUrl != null && listViewDogsRow.dogImageUrl != ''
+                                                              ? listViewDogsRow.dogImageUrl!
+                                                              : 'https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/sample-app-e07370/assets/6idym533w10n/placeholder_canine.png',
+                                                          fit: BoxFit.cover,
                                                         ),
-                                                      ],
-                                                    ),
+                                                      ),
+                                                      Padding(
+                                                        padding: EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 0.0),
+                                                        child: Column(
+                                                          mainAxisSize: MainAxisSize.max,
+                                                          mainAxisAlignment: MainAxisAlignment.center,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: [
+                                                            Text(
+                                                              valueOrDefault<String>(listViewDogsRow.dogName, 'Doggo Name'),
+                                                              style: FlutterFlowTheme.of(context).titleLarge.override(
+                                                                fontFamily: FlutterFlowTheme.of(context).titleLargeFamily,
+                                                                letterSpacing: 0.0,
+                                                                useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).titleLargeFamily),
+                                                              ),
+                                                            ),
+                                                            Padding(
+                                                              padding: EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 0.0),
+                                                              child: Text(
+                                                                valueOrDefault<String>(listViewDogsRow.dogGender, '-'),
+                                                                style: FlutterFlowTheme.of(context).labelMedium.override(
+                                                                  fontFamily: FlutterFlowTheme.of(context).labelMediumFamily,
+                                                                  letterSpacing: 0.0,
+                                                                  useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).labelMediumFamily),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            Padding(
+                                                              padding: EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 0.0),
+                                                              child: Text(
+                                                                'Age: ${valueOrDefault<String>(functions.calculateAgeFromBirthdayString(listViewDogsRow.dogBirthday!),'0')}',
+                                                                style: FlutterFlowTheme.of(context).bodySmall.override(
+                                                                  fontFamily: FlutterFlowTheme.of(context).bodySmallFamily,
+                                                                  letterSpacing: 0.0,
+                                                                  useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodySmallFamily),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
                                                 ),
                                               ),
                                             ),
-                                          ],
-                                        );
-                                      },
+                                          ),
+                                        ],
+                                      ),
                                     );
                                   },
-                                ),
-                              ],
+                                );
+                              },
                             ),
                           ),
                         ],
@@ -667,10 +459,13 @@ class _DogProfilesPageWidgetState extends State<DogProfilesPageWidget> {
                   ),
                 ],
               ),
-              wrapWithModel(
-                model: _model.bottomNavigationBarModel,
-                updateCallback: () => safeSetState(() {}),
-                child: BottomNavigationBarWidget(),
+              Align(
+                alignment: AlignmentDirectional(0.0, 1.0),
+                child: wrapWithModel(
+                  model: _model.bottomNavigationBarModel,
+                  updateCallback: () => setState(() {}),
+                  child: BottomNavigationBarWidget(),
+                ),
               ),
             ],
           ),
