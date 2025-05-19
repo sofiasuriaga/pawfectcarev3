@@ -76,8 +76,11 @@ android {
 
     buildTypes {
         release {
-            signingConfig signingConfigs.release // IMPORTANT: Use your release signing config
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            // Comment this line if you don’t have a key.properties or keystore
+            // signingConfig signingConfigs.release
+            minifyEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug { // Ensure debug build type is also present
             // signingConfig signingConfigs.debug // Usually debug uses default debug keystore
