@@ -11,6 +11,7 @@ import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'dart:ui';
 import '/index.dart';
+// import 'package:your_app_name/utils/task_filter_utils.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -37,12 +38,14 @@ class _DashboardAssignedTaskPageWidgetState
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
+
   @override
   void initState() {
     super.initState();
     _model = createModel(context, () => DashboardAssignedTaskPageModel());
 
-    // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       await Future.wait([
         Future(() async {
@@ -69,13 +72,21 @@ class _DashboardAssignedTaskPageWidgetState
       initialIndex: 0,
     )..addListener(() => safeSetState(() {}));
 
+    _searchController.addListener(() {
+      if (mounted) {
+        safeSetState(() {
+          _searchQuery = _searchController.text;
+        });
+      }
+    });
+
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
   void dispose() {
     _model.dispose();
-
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -128,7 +139,7 @@ class _DashboardAssignedTaskPageWidgetState
                               child: Row(
                                 mainAxisSize: MainAxisSize.max,
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Padding(
@@ -169,9 +180,9 @@ class _DashboardAssignedTaskPageWidgetState
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
                                           _model.apiResulttcc =
-                                              await LogoutCall.call(
+                                          await LogoutCall.call(
                                             accessToken:
-                                                FFAppState().accessToken,
+                                            FFAppState().accessToken,
                                           );
 
                                           context.pushNamed(
@@ -197,35 +208,19 @@ class _DashboardAssignedTaskPageWidgetState
                               child: Row(
                                 mainAxisSize: MainAxisSize.max,
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     'Tasks Assigned',
                                     style: FlutterFlowTheme.of(context)
                                         .headlineSmall
                                         .override(
-                                          font: GoogleFonts.interTight(
-                                            fontWeight:
-                                                FlutterFlowTheme.of(context)
-                                                    .headlineSmall
-                                                    .fontWeight,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .headlineSmall
-                                                    .fontStyle,
-                                          ),
-                                          color: FlutterFlowTheme.of(context)
-                                              .secondaryBackground,
-                                          letterSpacing: 0.0,
-                                          fontWeight:
-                                              FlutterFlowTheme.of(context)
-                                                  .headlineSmall
-                                                  .fontWeight,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .headlineSmall
-                                                  .fontStyle,
-                                        ),
+                                      fontFamily: FlutterFlowTheme.of(context).headlineSmallFamily,
+                                      color: FlutterFlowTheme.of(context)
+                                          .secondaryBackground,
+                                      letterSpacing: 0.0,
+                                      useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).headlineSmallFamily),
+                                    ),
                                   ),
                                   if ((FFAppState().usertype == 'Admin') ||
                                       (FFAppState().usertype == 'Owner'))
@@ -242,17 +237,17 @@ class _DashboardAssignedTaskPageWidgetState
                                                   elevation: 0,
                                                   insetPadding: EdgeInsets.zero,
                                                   backgroundColor:
-                                                      Colors.transparent,
+                                                  Colors.transparent,
                                                   alignment:
-                                                      AlignmentDirectional(
-                                                              0.0, 0.0)
-                                                          .resolve(
-                                                              Directionality.of(
-                                                                  context)),
+                                                  AlignmentDirectional(
+                                                      0.0, 0.0)
+                                                      .resolve(
+                                                      Directionality.of(
+                                                          context)),
                                                   child: GestureDetector(
                                                     onTap: () {
                                                       FocusScope.of(
-                                                              dialogContext)
+                                                          dialogContext)
                                                           .unfocus();
                                                       FocusManager
                                                           .instance.primaryFocus
@@ -262,7 +257,7 @@ class _DashboardAssignedTaskPageWidgetState
                                                       height: 500.0,
                                                       width: 355.0,
                                                       child:
-                                                          AddTaskComponentWidget(),
+                                                      AddTaskComponentWidget(),
                                                     ),
                                                   ),
                                                 );
@@ -277,45 +272,25 @@ class _DashboardAssignedTaskPageWidgetState
                                           options: FFButtonOptions(
                                             height: 35.0,
                                             padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    16.0, 0.0, 16.0, 0.0),
+                                            EdgeInsetsDirectional.fromSTEB(
+                                                16.0, 0.0, 16.0, 0.0),
                                             iconAlignment: IconAlignment.start,
                                             iconPadding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 0.0, 0.0, 0.0),
+                                            EdgeInsetsDirectional.fromSTEB(
+                                                0.0, 0.0, 0.0, 0.0),
                                             color: Color(0xFFFD8205),
                                             textStyle: FlutterFlowTheme.of(
-                                                    context)
+                                                context)
                                                 .titleSmall
                                                 .override(
-                                                  font: GoogleFonts.interTight(
-                                                    fontWeight:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .titleSmall
-                                                            .fontWeight,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .titleSmall
-                                                            .fontStyle,
-                                                  ),
-                                                  color: Colors.white,
-                                                  letterSpacing: 0.0,
-                                                  fontWeight:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .titleSmall
-                                                          .fontWeight,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .titleSmall
-                                                          .fontStyle,
-                                                ),
+                                              fontFamily: FlutterFlowTheme.of(context).titleSmallFamily,
+                                              color: Colors.white,
+                                              letterSpacing: 0.0,
+                                              useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).titleSmallFamily),
+                                            ),
                                             elevation: 0.0,
                                             borderRadius:
-                                                BorderRadius.circular(8.0),
+                                            BorderRadius.circular(8.0),
                                           ),
                                         ),
                                       ),
@@ -335,39 +310,50 @@ class _DashboardAssignedTaskPageWidgetState
                                 ),
                                 child: Padding(
                                   padding: EdgeInsetsDirectional.fromSTEB(
-                                      20.0, 0.0, 20.0, 0.0),
+                                      10.0, 0.0, 5.0, 0.0),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(
-                                        'Search...',
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .override(
-                                              font: GoogleFonts.inter(
-                                                fontWeight: FontWeight.w500,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMedium
-                                                        .fontStyle,
-                                              ),
+                                      Expanded(
+                                        child: TextField(
+                                          controller: _searchController,
+                                          obscureText: false,
+                                          decoration: InputDecoration(
+                                            hintText: 'Search tasks...',
+                                            hintStyle: FlutterFlowTheme.of(context).bodyMedium.override(
+                                              fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
                                               letterSpacing: 0.0,
-                                              fontWeight: FontWeight.w500,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyMedium
-                                                      .fontStyle,
+                                              color: Colors.grey,
+                                              useGoogleFonts: GoogleFonts.asMap().containsKey(
+                                                FlutterFlowTheme.of(context).bodyMediumFamily,
+                                              ),
                                             ),
+                                            enabledBorder: InputBorder.none,
+                                            focusedBorder: InputBorder.none,
+                                            filled: true,
+                                            fillColor: Colors.white,
+                                          ),
+                                          style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                            fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
+                                            letterSpacing: 0.0,
+                                            color: Colors.black,
+                                            useGoogleFonts: GoogleFonts.asMap().containsKey(
+                                              FlutterFlowTheme.of(context).bodyMediumFamily,
+                                            ),
+                                          ),
+                                          onChanged: (value) {},
+                                          onSubmitted: (value) {
+                                            safeSetState(() {
+                                              _searchQuery = value;
+                                            });
+                                          },
+                                        ),
                                       ),
-                                      Align(
-                                        alignment:
-                                            AlignmentDirectional(1.0, 0.0),
+                                      Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(8.0, 0.0, 0.0, 0.0),
                                         child: Icon(
                                           Icons.search_outlined,
-                                          color: FlutterFlowTheme.of(context)
-                                              .success,
+                                          color: FlutterFlowTheme.of(context).success,
                                           size: 24.0,
                                         ),
                                       ),
@@ -396,55 +382,23 @@ class _DashboardAssignedTaskPageWidgetState
                                       child: TabBar(
                                         labelColor: Colors.black,
                                         unselectedLabelColor:
-                                            FlutterFlowTheme.of(context)
-                                                .secondaryText,
+                                        FlutterFlowTheme.of(context)
+                                            .secondaryText,
                                         labelStyle: FlutterFlowTheme.of(context)
                                             .titleMedium
                                             .override(
-                                              font: GoogleFonts.interTight(
-                                                fontWeight:
-                                                    FlutterFlowTheme.of(context)
-                                                        .titleMedium
-                                                        .fontWeight,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .titleMedium
-                                                        .fontStyle,
-                                              ),
-                                              letterSpacing: 0.0,
-                                              fontWeight:
-                                                  FlutterFlowTheme.of(context)
-                                                      .titleMedium
-                                                      .fontWeight,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .titleMedium
-                                                      .fontStyle,
-                                            ),
+                                          fontFamily: FlutterFlowTheme.of(context).titleMediumFamily,
+                                          letterSpacing: 0.0,
+                                          useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).titleMediumFamily),
+                                        ),
                                         unselectedLabelStyle: FlutterFlowTheme
-                                                .of(context)
+                                            .of(context)
                                             .titleMedium
                                             .override(
-                                              font: GoogleFonts.interTight(
-                                                fontWeight:
-                                                    FlutterFlowTheme.of(context)
-                                                        .titleMedium
-                                                        .fontWeight,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .titleMedium
-                                                        .fontStyle,
-                                              ),
-                                              letterSpacing: 0.0,
-                                              fontWeight:
-                                                  FlutterFlowTheme.of(context)
-                                                      .titleMedium
-                                                      .fontWeight,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .titleMedium
-                                                      .fontStyle,
-                                            ),
+                                          fontFamily: FlutterFlowTheme.of(context).titleMediumFamily,
+                                          letterSpacing: 0.0,
+                                          useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).titleMediumFamily),
+                                        ),
                                         indicatorColor: Color(0xFFFD8205),
                                         tabs: [
                                           Tab(
@@ -467,22 +421,21 @@ class _DashboardAssignedTaskPageWidgetState
                                           FutureBuilder<ApiCallResponse>(
                                             future: GetTasksWithDogsCall.call(
                                               accessToken:
-                                                  FFAppState().accessToken,
+                                              FFAppState().accessToken,
                                             ),
                                             builder: (context, snapshot) {
-                                              // Customize what your widget looks like when it's loading.
                                               if (!snapshot.hasData) {
                                                 return Center(
                                                   child: SizedBox(
                                                     width: 50.0,
                                                     height: 50.0,
                                                     child:
-                                                        CircularProgressIndicator(
+                                                    CircularProgressIndicator(
                                                       valueColor:
-                                                          AlwaysStoppedAnimation<
-                                                              Color>(
+                                                      AlwaysStoppedAnimation<
+                                                          Color>(
                                                         FlutterFlowTheme.of(
-                                                                context)
+                                                            context)
                                                             .primary,
                                                       ),
                                                     ),
@@ -490,429 +443,370 @@ class _DashboardAssignedTaskPageWidgetState
                                                 );
                                               }
                                               final listViewGetTasksWithDogsResponse =
-                                                  snapshot.data!;
+                                              snapshot.data!;
 
                                               return Builder(
                                                 builder: (context) {
-                                                  final tasksWithDogsAndUsersV2 =
-                                                      (listViewGetTasksWithDogsResponse
-                                                                      .jsonBody
-                                                                      .toList()
-                                                                      .map<TasksWithDogStruct?>(
-                                                                          TasksWithDogStruct
-                                                                              .maybeFromMap)
-                                                                      .toList()
-                                                                  as Iterable<
-                                                                      TasksWithDogStruct?>)
-                                                              .withoutNulls
-                                                              ?.where((e) =>
-                                                                  e.status ==
-                                                                  'Active')
-                                                              .toList()
-                                                              ?.sortedList(
-                                                                  keyOf: (e) =>
-                                                                      e.dateCreated,
-                                                                  desc: true)
-                                                              ?.toList() ??
-                                                          [];
+                                                  var allTasks = (listViewGetTasksWithDogsResponse
+                                                      .jsonBody
+                                                      .toList()
+                                                      .map<TasksWithDogStruct?>(
+                                                      TasksWithDogStruct.maybeFromMap)
+                                                      .toList()
+                                                  as Iterable<TasksWithDogStruct?>)
+                                                      .withoutNulls;
+
+                                                  final filteredCurrentTasks = allTasks
+                                                      .where((task) => task.status == 'Active')
+                                                      .where((task) {
+                                                    if (_searchQuery.isEmpty) {
+                                                      return true;
+                                                    }
+                                                    final query = _searchQuery.toLowerCase();
+                                                    return (task.taskTitle?.toLowerCase().contains(query) ?? false) ||
+                                                        (task.taskDescription?.toLowerCase().contains(query) ?? false) ||
+                                                        (task.dog.dogName?.toLowerCase().contains(query) ?? false) ||                                                        (task.assignedToUser.userFullname?.toLowerCase().contains(query) ?? false) ||
+                                                        (task.assignedByUser.userFullname?.toLowerCase().contains(query) ?? false);
+                                                  })
+                                                      .toList()
+                                                      .sortedList(
+                                                      keyOf: (e) => e.dateCreated,
+                                                      desc: true);
+
+                                                  final tasksWithDogsAndUsersV2 = filteredCurrentTasks;
+
+                                                  if (tasksWithDogsAndUsersV2.isEmpty && _searchQuery.isNotEmpty) {
+                                                    return Center(child: Text('No tasks found for "$_searchQuery"'));
+                                                  } else if (tasksWithDogsAndUsersV2.isEmpty) {
+                                                    return Center(child: Text('No current tasks.'));
+                                                  }
 
                                                   return ListView.builder(
                                                     padding: EdgeInsets.zero,
                                                     shrinkWrap: true,
                                                     scrollDirection:
-                                                        Axis.vertical,
+                                                    Axis.vertical,
                                                     itemCount:
-                                                        tasksWithDogsAndUsersV2
-                                                            .length,
+                                                    tasksWithDogsAndUsersV2
+                                                        .length,
                                                     itemBuilder: (context,
                                                         tasksWithDogsAndUsersV2Index) {
                                                       final tasksWithDogsAndUsersV2Item =
-                                                          tasksWithDogsAndUsersV2[
-                                                              tasksWithDogsAndUsersV2Index];
+                                                      tasksWithDogsAndUsersV2[
+                                                      tasksWithDogsAndUsersV2Index];
                                                       return SingleChildScrollView(
                                                         child: Column(
                                                           mainAxisSize:
-                                                              MainAxisSize.max,
+                                                          MainAxisSize.max,
                                                           children: [
                                                             if ((FFAppState()
-                                                                        .usertype ==
-                                                                    'Admin') ||
+                                                                .usertype ==
+                                                                'Admin') ||
                                                                 (FFAppState()
-                                                                        .usertype ==
+                                                                    .usertype ==
                                                                     'Owner'))
                                                               Align(
                                                                 alignment:
-                                                                    AlignmentDirectional(
-                                                                        1.0,
-                                                                        0.0),
+                                                                AlignmentDirectional(
+                                                                    1.0,
+                                                                    0.0),
                                                                 child: Builder(
                                                                   builder:
                                                                       (context) =>
-                                                                          Padding(
-                                                                    padding: EdgeInsetsDirectional
-                                                                        .fromSTEB(
+                                                                      Padding(
+                                                                        padding: EdgeInsetsDirectional
+                                                                            .fromSTEB(
                                                                             0.0,
                                                                             10.0,
                                                                             30.0,
                                                                             0.0),
-                                                                    child:
+                                                                        child:
                                                                         InkWell(
-                                                                      splashColor:
+                                                                          splashColor:
                                                                           Colors
                                                                               .transparent,
-                                                                      focusColor:
+                                                                          focusColor:
                                                                           Colors
                                                                               .transparent,
-                                                                      hoverColor:
+                                                                          hoverColor:
                                                                           Colors
                                                                               .transparent,
-                                                                      highlightColor:
+                                                                          highlightColor:
                                                                           Colors
                                                                               .transparent,
-                                                                      onTap:
-                                                                          () async {
-                                                                        await showDialog(
-                                                                          context:
+                                                                          onTap:
+                                                                              () async {
+                                                                            await showDialog(
+                                                                              context:
                                                                               context,
-                                                                          builder:
-                                                                              (dialogContext) {
-                                                                            return Dialog(
-                                                                              elevation: 0,
-                                                                              insetPadding: EdgeInsets.zero,
-                                                                              backgroundColor: Colors.transparent,
-                                                                              alignment: AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
-                                                                              child: GestureDetector(
-                                                                                onTap: () {
-                                                                                  FocusScope.of(dialogContext).unfocus();
-                                                                                  FocusManager.instance.primaryFocus?.unfocus();
-                                                                                },
-                                                                                child: DeleteTaskWidget(
-                                                                                  id: tasksWithDogsAndUsersV2Item.id,
-                                                                                ),
-                                                                              ),
+                                                                              builder:
+                                                                                  (dialogContext) {
+                                                                                return Dialog(
+                                                                                  elevation: 0,
+                                                                                  insetPadding: EdgeInsets.zero,
+                                                                                  backgroundColor: Colors.transparent,
+                                                                                  alignment: AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                                                  child: GestureDetector(
+                                                                                    onTap: () {
+                                                                                      FocusScope.of(dialogContext).unfocus();
+                                                                                      FocusManager.instance.primaryFocus?.unfocus();
+                                                                                    },
+                                                                                    child: DeleteTaskWidget(
+                                                                                      id: tasksWithDogsAndUsersV2Item.id,
+                                                                                    ),
+                                                                                  ),
+                                                                                );
+                                                                              },
                                                                             );
                                                                           },
-                                                                        );
-                                                                      },
-                                                                      child:
+                                                                          child:
                                                                           Icon(
-                                                                        Icons
-                                                                            .delete,
-                                                                        color: FlutterFlowTheme.of(context)
-                                                                            .error,
-                                                                        size:
+                                                                            Icons
+                                                                                .delete,
+                                                                            color: FlutterFlowTheme.of(context)
+                                                                                .error,
+                                                                            size:
                                                                             20.0,
+                                                                          ),
+                                                                        ),
                                                                       ),
-                                                                    ),
-                                                                  ),
                                                                 ),
                                                               ),
                                                             Builder(
                                                               builder:
                                                                   (context) =>
-                                                                      Padding(
-                                                                padding: EdgeInsetsDirectional
-                                                                    .fromSTEB(
+                                                                  Padding(
+                                                                    padding: EdgeInsetsDirectional
+                                                                        .fromSTEB(
                                                                         20.0,
                                                                         10.0,
                                                                         20.0,
                                                                         0.0),
-                                                                child: InkWell(
-                                                                  splashColor:
+                                                                    child: InkWell(
+                                                                      splashColor:
                                                                       Colors
                                                                           .transparent,
-                                                                  focusColor: Colors
-                                                                      .transparent,
-                                                                  hoverColor: Colors
-                                                                      .transparent,
-                                                                  highlightColor:
+                                                                      focusColor: Colors
+                                                                          .transparent,
+                                                                      hoverColor: Colors
+                                                                          .transparent,
+                                                                      highlightColor:
                                                                       Colors
                                                                           .transparent,
-                                                                  onTap:
-                                                                      () async {
-                                                                    if (FFAppState()
+                                                                      onTap:
+                                                                          () async {
+                                                                        if (FFAppState()
                                                                             .usertype ==
-                                                                        'Caretaker') {
-                                                                      await showDialog(
-                                                                        context:
+                                                                            'Caretaker') {
+                                                                          await showDialog(
+                                                                            context:
                                                                             context,
-                                                                        builder:
-                                                                            (dialogContext) {
-                                                                          return Dialog(
-                                                                            elevation:
+                                                                            builder:
+                                                                                (dialogContext) {
+                                                                              return Dialog(
+                                                                                elevation:
                                                                                 0,
-                                                                            insetPadding:
+                                                                                insetPadding:
                                                                                 EdgeInsets.zero,
-                                                                            backgroundColor:
+                                                                                backgroundColor:
                                                                                 Colors.transparent,
-                                                                            alignment:
+                                                                                alignment:
                                                                                 AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
-                                                                            child:
+                                                                                child:
                                                                                 GestureDetector(
-                                                                              onTap: () {
-                                                                                FocusScope.of(dialogContext).unfocus();
-                                                                                FocusManager.instance.primaryFocus?.unfocus();
-                                                                              },
-                                                                              child: Container(
-                                                                                height: 400.0,
-                                                                                width: 400.0,
-                                                                                child: PopUpTaskComponentWidget(
-                                                                                  tasks: tasksWithDogsAndUsersV2Item,
+                                                                                  onTap: () {
+                                                                                    FocusScope.of(dialogContext).unfocus();
+                                                                                    FocusManager.instance.primaryFocus?.unfocus();
+                                                                                  },
+                                                                                  child: Container(
+                                                                                    height: 400.0,
+                                                                                    width: 400.0,
+                                                                                    child: PopUpTaskComponentWidget(
+                                                                                      tasks: tasksWithDogsAndUsersV2Item,
+                                                                                    ),
+                                                                                  ),
                                                                                 ),
-                                                                              ),
-                                                                            ),
+                                                                              );
+                                                                            },
                                                                           );
-                                                                        },
-                                                                      );
-                                                                    } else {
-                                                                      await showDialog(
-                                                                        context:
+                                                                        } else {
+                                                                          await showDialog(
+                                                                            context:
                                                                             context,
-                                                                        builder:
-                                                                            (dialogContext) {
-                                                                          return Dialog(
-                                                                            elevation:
+                                                                            builder:
+                                                                                (dialogContext) {
+                                                                              return Dialog(
+                                                                                elevation:
                                                                                 0,
-                                                                            insetPadding:
+                                                                                insetPadding:
                                                                                 EdgeInsets.zero,
-                                                                            backgroundColor:
+                                                                                backgroundColor:
                                                                                 Colors.transparent,
-                                                                            alignment:
+                                                                                alignment:
                                                                                 AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
-                                                                            child:
+                                                                                child:
                                                                                 GestureDetector(
-                                                                              onTap: () {
-                                                                                FocusScope.of(dialogContext).unfocus();
-                                                                                FocusManager.instance.primaryFocus?.unfocus();
-                                                                              },
-                                                                              child: Container(
-                                                                                height: 300.0,
-                                                                                width: 300.0,
-                                                                                child: FollowUpTaskComponentWidget(
-                                                                                  tasks: tasksWithDogsAndUsersV2Item,
+                                                                                  onTap: () {
+                                                                                    FocusScope.of(dialogContext).unfocus();
+                                                                                    FocusManager.instance.primaryFocus?.unfocus();
+                                                                                  },
+                                                                                  child: Container(
+                                                                                    height: 300.0,
+                                                                                    width: 300.0,
+                                                                                    child: FollowUpTaskComponentWidget(
+                                                                                      tasks: tasksWithDogsAndUsersV2Item,
+                                                                                    ),
+                                                                                  ),
                                                                                 ),
-                                                                              ),
-                                                                            ),
+                                                                              );
+                                                                            },
                                                                           );
-                                                                        },
-                                                                      );
-                                                                    }
-                                                                  },
-                                                                  child:
+                                                                        }
+                                                                      },
+                                                                      child:
                                                                       Container(
-                                                                    width:
+                                                                        width:
                                                                         314.6,
-                                                                    height:
+                                                                        height:
                                                                         265.3,
-                                                                    decoration:
+                                                                        decoration:
                                                                         BoxDecoration(
-                                                                      color: Colors
-                                                                          .white,
-                                                                      boxShadow: [
-                                                                        BoxShadow(
-                                                                          blurRadius:
+                                                                          color: Colors
+                                                                              .white,
+                                                                          boxShadow: [
+                                                                            BoxShadow(
+                                                                              blurRadius:
                                                                               4.0,
-                                                                          color:
+                                                                              color:
                                                                               Color(0x33000000),
-                                                                          offset:
+                                                                              offset:
                                                                               Offset(
-                                                                            0.0,
-                                                                            2.0,
-                                                                          ),
-                                                                        )
-                                                                      ],
-                                                                      borderRadius:
+                                                                                0.0,
+                                                                                2.0,
+                                                                              ),
+                                                                            )
+                                                                          ],
+                                                                          borderRadius:
                                                                           BorderRadius.circular(
                                                                               8.0),
-                                                                      border:
+                                                                          border:
                                                                           Border
                                                                               .all(
-                                                                        color: Color(
-                                                                            0x0014181B),
-                                                                      ),
-                                                                    ),
-                                                                    child:
+                                                                            color: Color(
+                                                                                0x0014181B),
+                                                                          ),
+                                                                        ),
+                                                                        child:
                                                                         Padding(
-                                                                      padding:
+                                                                          padding:
                                                                           EdgeInsets.all(
                                                                               8.0),
-                                                                      child:
+                                                                          child:
                                                                           SingleChildScrollView(
-                                                                        child:
+                                                                            child:
                                                                             Column(
-                                                                          mainAxisSize:
+                                                                              mainAxisSize:
                                                                               MainAxisSize.max,
-                                                                          children:
+                                                                              children:
                                                                               [
-                                                                            Container(
-                                                                              decoration: BoxDecoration(
-                                                                                borderRadius: BorderRadius.circular(16.0),
-                                                                              ),
-                                                                            ),
-                                                                            Align(
-                                                                              alignment: AlignmentDirectional(-1.0, 0.0),
-                                                                              child: Text(
-                                                                                'Tasks: ${valueOrDefault<String>(
-                                                                                  tasksWithDogsAndUsersV2Item.taskTitle,
-                                                                                  '-',
-                                                                                )}',
-                                                                                textAlign: TextAlign.start,
-                                                                                style: FlutterFlowTheme.of(context).labelLarge.override(
-                                                                                      font: GoogleFonts.inter(
-                                                                                        fontWeight: FlutterFlowTheme.of(context).labelLarge.fontWeight,
-                                                                                        fontStyle: FlutterFlowTheme.of(context).labelLarge.fontStyle,
-                                                                                      ),
-                                                                                      letterSpacing: 0.0,
-                                                                                      fontWeight: FlutterFlowTheme.of(context).labelLarge.fontWeight,
-                                                                                      fontStyle: FlutterFlowTheme.of(context).labelLarge.fontStyle,
-                                                                                    ),
-                                                                              ),
-                                                                            ),
-                                                                            Align(
-                                                                              alignment: AlignmentDirectional(-1.0, 0.0),
-                                                                              child: Text(
-                                                                                'Description: ${valueOrDefault<String>(
-                                                                                  tasksWithDogsAndUsersV2Item.taskDescription,
-                                                                                  '-',
-                                                                                )}',
-                                                                                textAlign: TextAlign.start,
-                                                                                style: FlutterFlowTheme.of(context).labelLarge.override(
-                                                                                      font: GoogleFonts.inter(
-                                                                                        fontWeight: FlutterFlowTheme.of(context).labelLarge.fontWeight,
-                                                                                        fontStyle: FlutterFlowTheme.of(context).labelLarge.fontStyle,
-                                                                                      ),
-                                                                                      letterSpacing: 0.0,
-                                                                                      fontWeight: FlutterFlowTheme.of(context).labelLarge.fontWeight,
-                                                                                      fontStyle: FlutterFlowTheme.of(context).labelLarge.fontStyle,
-                                                                                    ),
-                                                                              ),
-                                                                            ),
-                                                                            Row(
-                                                                              mainAxisSize: MainAxisSize.max,
-                                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                              children: [
                                                                                 Container(
                                                                                   decoration: BoxDecoration(
                                                                                     borderRadius: BorderRadius.circular(16.0),
                                                                                   ),
-                                                                                  child: Padding(
-                                                                                    padding: EdgeInsetsDirectional.fromSTEB(8.0, 4.0, 8.0, 4.0),
-                                                                                    child: Text(
-                                                                                      valueOrDefault<String>(
-                                                                                        tasksWithDogsAndUsersV2Item.status == 'Completed'
-                                                                                            ? valueOrDefault<String>(
-                                                                                                tasksWithDogsAndUsersV2Item.dateCompleted,
-                                                                                                '-',
-                                                                                              )
-                                                                                            : valueOrDefault<String>(
-                                                                                                tasksWithDogsAndUsersV2Item.dateCreated,
-                                                                                                '-',
-                                                                                              ),
-                                                                                        '-',
+                                                                                ),
+                                                                                Align(
+                                                                                  alignment: AlignmentDirectional(-1.0, 0.0),
+                                                                                  child: Text(
+                                                                                    'Tasks: ${valueOrDefault<String>(
+                                                                                      tasksWithDogsAndUsersV2Item.taskTitle,
+                                                                                      '-',
+                                                                                    )}',
+                                                                                    textAlign: TextAlign.start,
+                                                                                    style: FlutterFlowTheme.of(context).labelLarge.override(
+                                                                                      fontFamily: FlutterFlowTheme.of(context).labelLargeFamily,
+                                                                                      letterSpacing: 0.0,
+                                                                                      useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).labelLargeFamily),
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                                Align(
+                                                                                  alignment: AlignmentDirectional(-1.0, 0.0),
+                                                                                  child: Text(
+                                                                                    'Description: ${valueOrDefault<String>(
+                                                                                      tasksWithDogsAndUsersV2Item.taskDescription,
+                                                                                      '-',
+                                                                                    )}',
+                                                                                    textAlign: TextAlign.start,
+                                                                                    style: FlutterFlowTheme.of(context).labelLarge.override(
+                                                                                      fontFamily: FlutterFlowTheme.of(context).labelLargeFamily,
+                                                                                      letterSpacing: 0.0,
+                                                                                      useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).labelLargeFamily),
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                                Row(
+                                                                                  mainAxisSize: MainAxisSize.max,
+                                                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                                  children: [
+                                                                                    Container(
+                                                                                      decoration: BoxDecoration(
+                                                                                        borderRadius: BorderRadius.circular(16.0),
                                                                                       ),
-                                                                                      style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                            font: GoogleFonts.inter(
-                                                                                              fontWeight: FontWeight.w500,
-                                                                                              fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                      child: Padding(
+                                                                                        padding: EdgeInsetsDirectional.fromSTEB(8.0, 4.0, 8.0, 4.0),
+                                                                                        child: Text(
+                                                                                          valueOrDefault<String>(
+                                                                                            tasksWithDogsAndUsersV2Item.status == 'Completed'
+                                                                                                ? valueOrDefault<String>(
+                                                                                              tasksWithDogsAndUsersV2Item.dateCompleted,
+                                                                                              '-',
+                                                                                            )
+                                                                                                : valueOrDefault<String>(
+                                                                                              tasksWithDogsAndUsersV2Item.dateCreated,
+                                                                                              '-',
                                                                                             ),
+                                                                                            '-',
+                                                                                          ),
+                                                                                          style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                            fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
                                                                                             color: FlutterFlowTheme.of(context).success,
                                                                                             fontSize: 12.0,
                                                                                             letterSpacing: 0.0,
-                                                                                            fontWeight: FontWeight.w500,
-                                                                                            fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                            useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyMediumFamily),
                                                                                           ),
-                                                                                    ),
-                                                                                  ),
-                                                                                ),
-                                                                              ],
-                                                                            ),
-                                                                            Align(
-                                                                              alignment: AlignmentDirectional(1.0, 0.0),
-                                                                              child: Container(
-                                                                                decoration: BoxDecoration(
-                                                                                  color: Color(0xFF249689),
-                                                                                  borderRadius: BorderRadius.circular(16.0),
-                                                                                  border: Border.all(
-                                                                                    color: FlutterFlowTheme.of(context).success,
-                                                                                  ),
-                                                                                ),
-                                                                                child: Padding(
-                                                                                  padding: EdgeInsetsDirectional.fromSTEB(8.0, 4.0, 8.0, 4.0),
-                                                                                  child: Text(
-                                                                                    valueOrDefault<String>(
-                                                                                      tasksWithDogsAndUsersV2Item.status,
-                                                                                      '-',
-                                                                                    ),
-                                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                          font: GoogleFonts.inter(
-                                                                                            fontWeight: FontWeight.w500,
-                                                                                            fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                                          ),
-                                                                                          color: Colors.white,
-                                                                                          fontSize: 12.0,
-                                                                                          letterSpacing: 0.0,
-                                                                                          fontWeight: FontWeight.w500,
-                                                                                          fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                                        ),
-                                                                                  ),
-                                                                                ),
-                                                                              ),
-                                                                            ),
-
-                                                                            // You will have to add an action on this rich text to go to your login page.
-                                                                            Align(
-                                                                              alignment: AlignmentDirectional(1.0, 0.0),
-                                                                              child: Padding(
-                                                                                padding: EdgeInsetsDirectional.fromSTEB(8.0, 4.0, 8.0, 4.0),
-                                                                                child: RichText(
-                                                                                  textScaler: MediaQuery.of(context).textScaler,
-                                                                                  text: TextSpan(
-                                                                                    children: [
-                                                                                      TextSpan(
-                                                                                        text: 'Last Follow Up: ',
-                                                                                        style: TextStyle(
-                                                                                          fontWeight: FontWeight.w600,
-                                                                                          fontSize: 12.0,
                                                                                         ),
                                                                                       ),
-                                                                                      TextSpan(
-                                                                                        text: valueOrDefault<String>(
-                                                                                          tasksWithDogsAndUsersV2Item.lastFollowUpAt,
+                                                                                    ),
+                                                                                  ],
+                                                                                ),
+                                                                                Align(
+                                                                                  alignment: AlignmentDirectional(1.0, 0.0),
+                                                                                  child: Container(
+                                                                                    decoration: BoxDecoration(
+                                                                                      color: Color(0xFF249689),
+                                                                                      borderRadius: BorderRadius.circular(16.0),
+                                                                                      border: Border.all(
+                                                                                        color: FlutterFlowTheme.of(context).success,
+                                                                                      ),
+                                                                                    ),
+                                                                                    child: Padding(
+                                                                                      padding: EdgeInsetsDirectional.fromSTEB(8.0, 4.0, 8.0, 4.0),
+                                                                                      child: Text(
+                                                                                        valueOrDefault<String>(
+                                                                                          tasksWithDogsAndUsersV2Item.status,
                                                                                           '-',
                                                                                         ),
                                                                                         style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                              font: GoogleFonts.plusJakartaSans(
-                                                                                                fontWeight: FontWeight.w600,
-                                                                                                fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                                              ),
-                                                                                              color: Color(0xFFFD8205),
-                                                                                              fontSize: 12.0,
-                                                                                              letterSpacing: 0.0,
-                                                                                              fontWeight: FontWeight.w600,
-                                                                                              fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                                            ),
-                                                                                      )
-                                                                                    ],
-                                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                          font: GoogleFonts.plusJakartaSans(
-                                                                                            fontWeight: FontWeight.w500,
-                                                                                            fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                                          ),
-                                                                                          color: Color(0xFF101213),
-                                                                                          fontSize: 14.0,
+                                                                                          fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
+                                                                                          color: Colors.white,
+                                                                                          fontSize: 12.0,
                                                                                           letterSpacing: 0.0,
-                                                                                          fontWeight: FontWeight.w500,
-                                                                                          fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                          useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyMediumFamily),
                                                                                         ),
+                                                                                      ),
+                                                                                    ),
                                                                                   ),
                                                                                 ),
-                                                                              ),
-                                                                            ),
-                                                                            Row(
-                                                                              mainAxisSize: MainAxisSize.max,
-                                                                              mainAxisAlignment: MainAxisAlignment.end,
-                                                                              children: [
-                                                                                // You will have to add an action on this rich text to go to your login page.
                                                                                 Align(
                                                                                   alignment: AlignmentDirectional(1.0, 0.0),
                                                                                   child: Padding(
@@ -922,7 +816,7 @@ class _DashboardAssignedTaskPageWidgetState
                                                                                       text: TextSpan(
                                                                                         children: [
                                                                                           TextSpan(
-                                                                                            text: 'Assigned from: ',
+                                                                                            text: 'Last Follow Up: ',
                                                                                             style: TextStyle(
                                                                                               fontWeight: FontWeight.w600,
                                                                                               fontSize: 12.0,
@@ -930,108 +824,138 @@ class _DashboardAssignedTaskPageWidgetState
                                                                                           ),
                                                                                           TextSpan(
                                                                                             text: valueOrDefault<String>(
-                                                                                              tasksWithDogsAndUsersV2Item.assignedByUser.userFullname,
+                                                                                              tasksWithDogsAndUsersV2Item.lastFollowUpAt,
                                                                                               '-',
                                                                                             ),
                                                                                             style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                                  font: GoogleFonts.plusJakartaSans(
-                                                                                                    fontWeight: FontWeight.w600,
-                                                                                                    fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                                                  ),
-                                                                                                  color: Color(0xFFFD8205),
-                                                                                                  fontSize: 12.0,
-                                                                                                  letterSpacing: 0.0,
-                                                                                                  fontWeight: FontWeight.w600,
-                                                                                                  fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                                                ),
+                                                                                              fontFamily: 'Plus Jakarta Sans',
+                                                                                              color: Color(0xFFFD8205),
+                                                                                              fontSize: 12.0,
+                                                                                              letterSpacing: 0.0,
+                                                                                              fontWeight: FontWeight.w600,
+                                                                                              useGoogleFonts: GoogleFonts.asMap().containsKey('Plus Jakarta Sans'),
+                                                                                            ),
                                                                                           )
                                                                                         ],
                                                                                         style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                              font: GoogleFonts.plusJakartaSans(
-                                                                                                fontWeight: FontWeight.w500,
-                                                                                                fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                                              ),
-                                                                                              color: Color(0xFF101213),
-                                                                                              fontSize: 14.0,
-                                                                                              letterSpacing: 0.0,
-                                                                                              fontWeight: FontWeight.w500,
-                                                                                              fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                                            ),
+                                                                                          fontFamily: 'Plus Jakarta Sans',
+                                                                                          color: Color(0xFF101213),
+                                                                                          fontSize: 14.0,
+                                                                                          letterSpacing: 0.0,
+                                                                                          useGoogleFonts: GoogleFonts.asMap().containsKey('Plus Jakarta Sans'),
+                                                                                        ),
                                                                                       ),
                                                                                     ),
                                                                                   ),
                                                                                 ),
-                                                                              ],
-                                                                            ),
-                                                                            Row(
-                                                                              mainAxisSize: MainAxisSize.max,
-                                                                              mainAxisAlignment: MainAxisAlignment.end,
-                                                                              children: [
-                                                                                Container(
-                                                                                  decoration: BoxDecoration(
-                                                                                    borderRadius: BorderRadius.circular(16.0),
-                                                                                    border: Border.all(
-                                                                                      color: Color(0xFFFD8205),
-                                                                                      width: 1.0,
+                                                                                Row(
+                                                                                  mainAxisSize: MainAxisSize.max,
+                                                                                  mainAxisAlignment: MainAxisAlignment.end,
+                                                                                  children: [
+                                                                                    Align(
+                                                                                      alignment: AlignmentDirectional(1.0, 0.0),
+                                                                                      child: Padding(
+                                                                                        padding: EdgeInsetsDirectional.fromSTEB(8.0, 4.0, 8.0, 4.0),
+                                                                                        child: RichText(
+                                                                                          textScaler: MediaQuery.of(context).textScaler,
+                                                                                          text: TextSpan(
+                                                                                            children: [
+                                                                                              TextSpan(
+                                                                                                text: 'Assigned from: ',
+                                                                                                style: TextStyle(
+                                                                                                  fontWeight: FontWeight.w600,
+                                                                                                  fontSize: 12.0,
+                                                                                                ),
+                                                                                              ),
+                                                                                              TextSpan(
+                                                                                                text: valueOrDefault<String>(
+                                                                                                  tasksWithDogsAndUsersV2Item.assignedByUser.userFullname,
+                                                                                                  '-',
+                                                                                                ),
+                                                                                                style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                  fontFamily: 'Plus Jakarta Sans',
+                                                                                                  color: Color(0xFFFD8205),
+                                                                                                  fontSize: 12.0,
+                                                                                                  letterSpacing: 0.0,
+                                                                                                  fontWeight: FontWeight.w600,
+                                                                                                  useGoogleFonts: GoogleFonts.asMap().containsKey('Plus Jakarta Sans'),
+                                                                                                ),
+                                                                                              )
+                                                                                            ],
+                                                                                            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                              fontFamily: 'Plus Jakarta Sans',
+                                                                                              color: Color(0xFF101213),
+                                                                                              fontSize: 14.0,
+                                                                                              letterSpacing: 0.0,
+                                                                                              useGoogleFonts: GoogleFonts.asMap().containsKey('Plus Jakarta Sans'),
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                      ),
                                                                                     ),
-                                                                                  ),
-                                                                                  child:
-                                                                                      // You will have to add an action on this rich text to go to your login page.
+                                                                                  ],
+                                                                                ),
+                                                                                Row(
+                                                                                  mainAxisSize: MainAxisSize.max,
+                                                                                  mainAxisAlignment: MainAxisAlignment.end,
+                                                                                  children: [
+                                                                                    Container(
+                                                                                      decoration: BoxDecoration(
+                                                                                        borderRadius: BorderRadius.circular(16.0),
+                                                                                        border: Border.all(
+                                                                                          color: Color(0xFFFD8205),
+                                                                                          width: 1.0,
+                                                                                        ),
+                                                                                      ),
+                                                                                      child:
                                                                                       Padding(
-                                                                                    padding: EdgeInsetsDirectional.fromSTEB(8.0, 4.0, 8.0, 4.0),
-                                                                                    child: RichText(
-                                                                                      textScaler: MediaQuery.of(context).textScaler,
-                                                                                      text: TextSpan(
-                                                                                        children: [
-                                                                                          TextSpan(
-                                                                                            text: 'Assigned to: ',
-                                                                                            style: TextStyle(
-                                                                                              fontWeight: FontWeight.w600,
-                                                                                              fontSize: 12.0,
-                                                                                            ),
-                                                                                          ),
-                                                                                          TextSpan(
-                                                                                            text: valueOrDefault<String>(
-                                                                                              tasksWithDogsAndUsersV2Item.assignedToUser.userFullname,
-                                                                                              '-',
-                                                                                            ),
-                                                                                            style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                                  font: GoogleFonts.plusJakartaSans(
-                                                                                                    fontWeight: FontWeight.w600,
-                                                                                                    fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                                                  ),
+                                                                                        padding: EdgeInsetsDirectional.fromSTEB(8.0, 4.0, 8.0, 4.0),
+                                                                                        child: RichText(
+                                                                                          textScaler: MediaQuery.of(context).textScaler,
+                                                                                          text: TextSpan(
+                                                                                            children: [
+                                                                                              TextSpan(
+                                                                                                text: 'Assigned to: ',
+                                                                                                style: TextStyle(
+                                                                                                  fontWeight: FontWeight.w600,
+                                                                                                  fontSize: 12.0,
+                                                                                                ),
+                                                                                              ),
+                                                                                              TextSpan(
+                                                                                                text: valueOrDefault<String>(
+                                                                                                  tasksWithDogsAndUsersV2Item.assignedToUser.userFullname,
+                                                                                                  '-',
+                                                                                                ),
+                                                                                                style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                  fontFamily: 'Plus Jakarta Sans',
                                                                                                   color: Color(0xFFFD8205),
                                                                                                   fontSize: 12.0,
                                                                                                   letterSpacing: 0.0,
                                                                                                   fontWeight: FontWeight.w600,
-                                                                                                  fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                                  useGoogleFonts: GoogleFonts.asMap().containsKey('Plus Jakarta Sans'),
                                                                                                 ),
-                                                                                          )
-                                                                                        ],
-                                                                                        style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                              font: GoogleFonts.plusJakartaSans(
-                                                                                                fontWeight: FontWeight.w500,
-                                                                                                fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                                              ),
+                                                                                              )
+                                                                                            ],
+                                                                                            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                              fontFamily: 'Plus Jakarta Sans',
                                                                                               color: Color(0xFF101213),
                                                                                               fontSize: 14.0,
                                                                                               letterSpacing: 0.0,
-                                                                                              fontWeight: FontWeight.w500,
-                                                                                              fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                              useGoogleFonts: GoogleFonts.asMap().containsKey('Plus Jakarta Sans'),
                                                                                             ),
+                                                                                          ),
+                                                                                        ),
                                                                                       ),
                                                                                     ),
-                                                                                  ),
+                                                                                  ],
                                                                                 ),
-                                                                              ],
+                                                                              ].divide(SizedBox(height: 10.0)),
                                                                             ),
-                                                                          ].divide(SizedBox(height: 10.0)),
+                                                                          ),
                                                                         ),
                                                                       ),
                                                                     ),
                                                                   ),
-                                                                ),
-                                                              ),
                                                             ),
                                                           ],
                                                         ),
@@ -1045,22 +969,21 @@ class _DashboardAssignedTaskPageWidgetState
                                           FutureBuilder<ApiCallResponse>(
                                             future: GetTasksWithDogsCall.call(
                                               accessToken:
-                                                  FFAppState().accessToken,
+                                              FFAppState().accessToken,
                                             ),
                                             builder: (context, snapshot) {
-                                              // Customize what your widget looks like when it's loading.
                                               if (!snapshot.hasData) {
                                                 return Center(
                                                   child: SizedBox(
                                                     width: 50.0,
                                                     height: 50.0,
                                                     child:
-                                                        CircularProgressIndicator(
+                                                    CircularProgressIndicator(
                                                       valueColor:
-                                                          AlwaysStoppedAnimation<
-                                                              Color>(
+                                                      AlwaysStoppedAnimation<
+                                                          Color>(
                                                         FlutterFlowTheme.of(
-                                                                context)
+                                                            context)
                                                             .primary,
                                                       ),
                                                     ),
@@ -1068,426 +991,369 @@ class _DashboardAssignedTaskPageWidgetState
                                                 );
                                               }
                                               final listViewGetTasksWithDogsResponse =
-                                                  snapshot.data!;
+                                              snapshot.data!;
 
                                               return Builder(
                                                 builder: (context) {
-                                                  final tasksWithDogsAndUsersV2 =
-                                                      (listViewGetTasksWithDogsResponse
-                                                                      .jsonBody
-                                                                      .toList()
-                                                                      .map<TasksWithDogStruct?>(
-                                                                          TasksWithDogStruct
-                                                                              .maybeFromMap)
-                                                                      .toList()
-                                                                  as Iterable<
-                                                                      TasksWithDogStruct?>)
-                                                              .withoutNulls
-                                                              ?.where((e) =>
-                                                                  e.status ==
-                                                                  'Completed')
-                                                              .toList()
-                                                              ?.toList() ??
-                                                          [];
+                                                  var allTasks = (listViewGetTasksWithDogsResponse
+                                                      .jsonBody
+                                                      .toList()
+                                                      .map<TasksWithDogStruct?>(
+                                                      TasksWithDogStruct.maybeFromMap)
+                                                      .toList()
+                                                  as Iterable<TasksWithDogStruct?>)
+                                                      .withoutNulls;
+
+                                                  final filteredCompletedTasks = allTasks
+                                                      .where((task) => task.status == 'Completed')
+                                                      .where((task) {
+                                                    if (_searchQuery.isEmpty) {
+                                                      return true;
+                                                    }
+                                                    final query = _searchQuery.toLowerCase();
+                                                    return (task.taskTitle?.toLowerCase().contains(query) ?? false) ||
+                                                        (task.taskDescription?.toLowerCase().contains(query) ?? false) ||
+                                                        (task.dog.dogName?.toLowerCase().contains(query) ?? false) ||                                                        (task.assignedToUser.userFullname?.toLowerCase().contains(query) ?? false) ||
+                                                        (task.assignedByUser.userFullname?.toLowerCase().contains(query) ?? false);
+                                                  })
+                                                      .toList();
+
+
+                                                  final tasksWithDogsAndUsersV2 = filteredCompletedTasks;
+
+                                                  if (tasksWithDogsAndUsersV2.isEmpty && _searchQuery.isNotEmpty) {
+                                                    return Center(child: Text('No tasks found for "$_searchQuery"'));
+                                                  } else if (tasksWithDogsAndUsersV2.isEmpty) {
+                                                    return Center(child: Text('No completed tasks.'));
+                                                  }
 
                                                   return ListView.builder(
                                                     padding: EdgeInsets.zero,
                                                     shrinkWrap: true,
                                                     scrollDirection:
-                                                        Axis.vertical,
+                                                    Axis.vertical,
                                                     itemCount:
-                                                        tasksWithDogsAndUsersV2
-                                                            .length,
+                                                    tasksWithDogsAndUsersV2
+                                                        .length,
                                                     itemBuilder: (context,
                                                         tasksWithDogsAndUsersV2Index) {
                                                       final tasksWithDogsAndUsersV2Item =
-                                                          tasksWithDogsAndUsersV2[
-                                                              tasksWithDogsAndUsersV2Index];
+                                                      tasksWithDogsAndUsersV2[
+                                                      tasksWithDogsAndUsersV2Index];
                                                       return SingleChildScrollView(
                                                         child: Column(
                                                           mainAxisSize:
-                                                              MainAxisSize.max,
+                                                          MainAxisSize.max,
                                                           children: [
                                                             if ((FFAppState()
-                                                                        .usertype ==
-                                                                    'Admin') ||
+                                                                .usertype ==
+                                                                'Admin') ||
                                                                 (FFAppState()
-                                                                        .usertype ==
+                                                                    .usertype ==
                                                                     'Owner'))
                                                               Align(
                                                                 alignment:
-                                                                    AlignmentDirectional(
-                                                                        1.0,
-                                                                        0.0),
+                                                                AlignmentDirectional(
+                                                                    1.0,
+                                                                    0.0),
                                                                 child: Builder(
                                                                   builder:
                                                                       (context) =>
-                                                                          Padding(
-                                                                    padding: EdgeInsetsDirectional
-                                                                        .fromSTEB(
+                                                                      Padding(
+                                                                        padding: EdgeInsetsDirectional
+                                                                            .fromSTEB(
                                                                             0.0,
                                                                             10.0,
                                                                             30.0,
                                                                             0.0),
-                                                                    child:
+                                                                        child:
                                                                         InkWell(
-                                                                      splashColor:
+                                                                          splashColor:
                                                                           Colors
                                                                               .transparent,
-                                                                      focusColor:
+                                                                          focusColor:
                                                                           Colors
                                                                               .transparent,
-                                                                      hoverColor:
+                                                                          hoverColor:
                                                                           Colors
                                                                               .transparent,
-                                                                      highlightColor:
+                                                                          highlightColor:
                                                                           Colors
                                                                               .transparent,
-                                                                      onTap:
-                                                                          () async {
-                                                                        _model.apiResult62osdasda =
+                                                                          onTap:
+                                                                              () async {
+                                                                            _model.apiResult62osdasda =
                                                                             await DeleteTaskByIDCall.call(
-                                                                          id: tasksWithDogsAndUsersV2Item
-                                                                              .id,
-                                                                          accessToken:
+                                                                              id: tasksWithDogsAndUsersV2Item
+                                                                                  .id,
+                                                                              accessToken:
                                                                               FFAppState().accessToken,
-                                                                        );
-
-                                                                        await showDialog(
-                                                                          context:
-                                                                              context,
-                                                                          builder:
-                                                                              (dialogContext) {
-                                                                            return Dialog(
-                                                                              elevation: 0,
-                                                                              insetPadding: EdgeInsets.zero,
-                                                                              backgroundColor: Colors.transparent,
-                                                                              alignment: AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
-                                                                              child: GestureDetector(
-                                                                                onTap: () {
-                                                                                  FocusScope.of(dialogContext).unfocus();
-                                                                                  FocusManager.instance.primaryFocus?.unfocus();
-                                                                                },
-                                                                                child: SuccessComponentWidget(),
-                                                                              ),
                                                                             );
-                                                                          },
-                                                                        );
 
-                                                                        safeSetState(
-                                                                            () {});
-                                                                      },
-                                                                      child:
+                                                                            await showDialog(
+                                                                              context:
+                                                                              context,
+                                                                              builder:
+                                                                                  (dialogContext) {
+                                                                                return Dialog(
+                                                                                  elevation: 0,
+                                                                                  insetPadding: EdgeInsets.zero,
+                                                                                  backgroundColor: Colors.transparent,
+                                                                                  alignment: AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                                                  child: GestureDetector(
+                                                                                    onTap: () {
+                                                                                      FocusScope.of(dialogContext).unfocus();
+                                                                                      FocusManager.instance.primaryFocus?.unfocus();
+                                                                                    },
+                                                                                    child: SuccessComponentWidget(),
+                                                                                  ),
+                                                                                );
+                                                                              },
+                                                                            );
+
+                                                                            safeSetState(
+                                                                                    () {});
+                                                                          },
+                                                                          child:
                                                                           Icon(
-                                                                        Icons
-                                                                            .delete,
-                                                                        color: FlutterFlowTheme.of(context)
-                                                                            .error,
-                                                                        size:
+                                                                            Icons
+                                                                                .delete,
+                                                                            color: FlutterFlowTheme.of(context)
+                                                                                .error,
+                                                                            size:
                                                                             20.0,
+                                                                          ),
+                                                                        ),
                                                                       ),
-                                                                    ),
-                                                                  ),
                                                                 ),
                                                               ),
                                                             Builder(
                                                               builder:
                                                                   (context) =>
-                                                                      Padding(
-                                                                padding: EdgeInsetsDirectional
-                                                                    .fromSTEB(
+                                                                  Padding(
+                                                                    padding: EdgeInsetsDirectional
+                                                                        .fromSTEB(
                                                                         20.0,
                                                                         20.0,
                                                                         20.0,
                                                                         0.0),
-                                                                child: InkWell(
-                                                                  splashColor:
+                                                                    child: InkWell(
+                                                                      splashColor:
                                                                       Colors
                                                                           .transparent,
-                                                                  focusColor: Colors
-                                                                      .transparent,
-                                                                  hoverColor: Colors
-                                                                      .transparent,
-                                                                  highlightColor:
+                                                                      focusColor: Colors
+                                                                          .transparent,
+                                                                      hoverColor: Colors
+                                                                          .transparent,
+                                                                      highlightColor:
                                                                       Colors
                                                                           .transparent,
-                                                                  onTap:
-                                                                      () async {
-                                                                    if (FFAppState()
+                                                                      onTap:
+                                                                          () async {
+                                                                        if (FFAppState()
                                                                             .usertype ==
-                                                                        'Caretaker') {
-                                                                      await showDialog(
-                                                                        context:
+                                                                            'Caretaker') {
+                                                                          await showDialog(
+                                                                            context:
                                                                             context,
-                                                                        builder:
-                                                                            (dialogContext) {
-                                                                          return Dialog(
-                                                                            elevation:
+                                                                            builder:
+                                                                                (dialogContext) {
+                                                                              return Dialog(
+                                                                                elevation:
                                                                                 0,
-                                                                            insetPadding:
+                                                                                insetPadding:
                                                                                 EdgeInsets.zero,
-                                                                            backgroundColor:
+                                                                                backgroundColor:
                                                                                 Colors.transparent,
-                                                                            alignment:
+                                                                                alignment:
                                                                                 AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
-                                                                            child:
+                                                                                child:
                                                                                 GestureDetector(
-                                                                              onTap: () {
-                                                                                FocusScope.of(dialogContext).unfocus();
-                                                                                FocusManager.instance.primaryFocus?.unfocus();
-                                                                              },
-                                                                              child: PopUpTaskComponentWidget(
-                                                                                tasks: tasksWithDogsAndUsersV2Item,
-                                                                              ),
-                                                                            ),
+                                                                                  onTap: () {
+                                                                                    FocusScope.of(dialogContext).unfocus();
+                                                                                    FocusManager.instance.primaryFocus?.unfocus();
+                                                                                  },
+                                                                                  child: PopUpTaskComponentWidget(
+                                                                                    tasks: tasksWithDogsAndUsersV2Item,
+                                                                                  ),
+                                                                                ),
+                                                                              );
+                                                                            },
                                                                           );
-                                                                        },
-                                                                      );
-                                                                    } else {
-                                                                      await showDialog(
-                                                                        context:
+                                                                        } else {
+                                                                          await showDialog(
+                                                                            context:
                                                                             context,
-                                                                        builder:
-                                                                            (dialogContext) {
-                                                                          return Dialog(
-                                                                            elevation:
+                                                                            builder:
+                                                                                (dialogContext) {
+                                                                              return Dialog(
+                                                                                elevation:
                                                                                 0,
-                                                                            insetPadding:
+                                                                                insetPadding:
                                                                                 EdgeInsets.zero,
-                                                                            backgroundColor:
+                                                                                backgroundColor:
                                                                                 Colors.transparent,
-                                                                            alignment:
+                                                                                alignment:
                                                                                 AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
-                                                                            child:
+                                                                                child:
                                                                                 GestureDetector(
-                                                                              onTap: () {
-                                                                                FocusScope.of(dialogContext).unfocus();
-                                                                                FocusManager.instance.primaryFocus?.unfocus();
-                                                                              },
-                                                                              child: FollowUpTaskComponentWidget(
-                                                                                tasks: tasksWithDogsAndUsersV2Item,
-                                                                              ),
-                                                                            ),
+                                                                                  onTap: () {
+                                                                                    FocusScope.of(dialogContext).unfocus();
+                                                                                    FocusManager.instance.primaryFocus?.unfocus();
+                                                                                  },
+                                                                                  child: FollowUpTaskComponentWidget(
+                                                                                    tasks: tasksWithDogsAndUsersV2Item,
+                                                                                  ),
+                                                                                ),
+                                                                              );
+                                                                            },
                                                                           );
-                                                                        },
-                                                                      );
-                                                                    }
-                                                                  },
-                                                                  child:
+                                                                        }
+                                                                      },
+                                                                      child:
                                                                       Container(
-                                                                    width:
+                                                                        width:
                                                                         314.6,
-                                                                    height:
+                                                                        height:
                                                                         187.4,
-                                                                    decoration:
+                                                                        decoration:
                                                                         BoxDecoration(
-                                                                      color: Colors
-                                                                          .white,
-                                                                      boxShadow: [
-                                                                        BoxShadow(
-                                                                          blurRadius:
+                                                                          color: Colors
+                                                                              .white,
+                                                                          boxShadow: [
+                                                                            BoxShadow(
+                                                                              blurRadius:
                                                                               4.0,
-                                                                          color:
+                                                                              color:
                                                                               Color(0x33000000),
-                                                                          offset:
+                                                                              offset:
                                                                               Offset(
-                                                                            0.0,
-                                                                            2.0,
-                                                                          ),
-                                                                        )
-                                                                      ],
-                                                                      borderRadius:
+                                                                                0.0,
+                                                                                2.0,
+                                                                              ),
+                                                                            )
+                                                                          ],
+                                                                          borderRadius:
                                                                           BorderRadius.circular(
                                                                               8.0),
-                                                                      border:
+                                                                          border:
                                                                           Border
                                                                               .all(
-                                                                        color: Color(
-                                                                            0x0014181B),
-                                                                      ),
-                                                                    ),
-                                                                    child:
+                                                                            color: Color(
+                                                                                0x0014181B),
+                                                                          ),
+                                                                        ),
+                                                                        child:
                                                                         Padding(
-                                                                      padding:
+                                                                          padding:
                                                                           EdgeInsets.all(
                                                                               8.0),
-                                                                      child:
+                                                                          child:
                                                                           SingleChildScrollView(
-                                                                        child:
+                                                                            child:
                                                                             Column(
-                                                                          mainAxisSize:
+                                                                              mainAxisSize:
                                                                               MainAxisSize.max,
-                                                                          children:
+                                                                              children:
                                                                               [
-                                                                            Container(
-                                                                              decoration: BoxDecoration(
-                                                                                borderRadius: BorderRadius.circular(16.0),
-                                                                              ),
-                                                                            ),
-                                                                            Align(
-                                                                              alignment: AlignmentDirectional(-1.0, 0.0),
-                                                                              child: Text(
-                                                                                'Tasks: ${valueOrDefault<String>(
-                                                                                  tasksWithDogsAndUsersV2Item.taskTitle,
-                                                                                  '-',
-                                                                                )}',
-                                                                                textAlign: TextAlign.start,
-                                                                                style: FlutterFlowTheme.of(context).labelLarge.override(
-                                                                                      font: GoogleFonts.inter(
-                                                                                        fontWeight: FlutterFlowTheme.of(context).labelLarge.fontWeight,
-                                                                                        fontStyle: FlutterFlowTheme.of(context).labelLarge.fontStyle,
-                                                                                      ),
-                                                                                      letterSpacing: 0.0,
-                                                                                      fontWeight: FlutterFlowTheme.of(context).labelLarge.fontWeight,
-                                                                                      fontStyle: FlutterFlowTheme.of(context).labelLarge.fontStyle,
-                                                                                    ),
-                                                                              ),
-                                                                            ),
-                                                                            Align(
-                                                                              alignment: AlignmentDirectional(-1.0, 0.0),
-                                                                              child: Text(
-                                                                                'Description: ${valueOrDefault<String>(
-                                                                                  tasksWithDogsAndUsersV2Item.taskDescription,
-                                                                                  '-',
-                                                                                )}',
-                                                                                textAlign: TextAlign.start,
-                                                                                style: FlutterFlowTheme.of(context).labelLarge.override(
-                                                                                      font: GoogleFonts.inter(
-                                                                                        fontWeight: FlutterFlowTheme.of(context).labelLarge.fontWeight,
-                                                                                        fontStyle: FlutterFlowTheme.of(context).labelLarge.fontStyle,
-                                                                                      ),
-                                                                                      letterSpacing: 0.0,
-                                                                                      fontWeight: FlutterFlowTheme.of(context).labelLarge.fontWeight,
-                                                                                      fontStyle: FlutterFlowTheme.of(context).labelLarge.fontStyle,
-                                                                                    ),
-                                                                              ),
-                                                                            ),
-                                                                            Row(
-                                                                              mainAxisSize: MainAxisSize.max,
-                                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                              children: [
                                                                                 Container(
                                                                                   decoration: BoxDecoration(
                                                                                     borderRadius: BorderRadius.circular(16.0),
                                                                                   ),
-                                                                                  child: Padding(
-                                                                                    padding: EdgeInsetsDirectional.fromSTEB(8.0, 4.0, 8.0, 4.0),
-                                                                                    child: Text(
-                                                                                      valueOrDefault<String>(
-                                                                                        tasksWithDogsAndUsersV2Item.status == 'Completed'
-                                                                                            ? valueOrDefault<String>(
-                                                                                                tasksWithDogsAndUsersV2Item.dateCompleted,
-                                                                                                '-',
-                                                                                              )
-                                                                                            : valueOrDefault<String>(
-                                                                                                tasksWithDogsAndUsersV2Item.dateCreated,
-                                                                                                '-',
-                                                                                              ),
-                                                                                        '-',
+                                                                                ),
+                                                                                Align(
+                                                                                  alignment: AlignmentDirectional(-1.0, 0.0),
+                                                                                  child: Text(
+                                                                                    'Tasks: ${valueOrDefault<String>(
+                                                                                      tasksWithDogsAndUsersV2Item.taskTitle,
+                                                                                      '-',
+                                                                                    )}',
+                                                                                    textAlign: TextAlign.start,
+                                                                                    style: FlutterFlowTheme.of(context).labelLarge.override(
+                                                                                      fontFamily: FlutterFlowTheme.of(context).labelLargeFamily,
+                                                                                      letterSpacing: 0.0,
+                                                                                      useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).labelLargeFamily),
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                                Align(
+                                                                                  alignment: AlignmentDirectional(-1.0, 0.0),
+                                                                                  child: Text(
+                                                                                    'Description: ${valueOrDefault<String>(
+                                                                                      tasksWithDogsAndUsersV2Item.taskDescription,
+                                                                                      '-',
+                                                                                    )}',
+                                                                                    textAlign: TextAlign.start,
+                                                                                    style: FlutterFlowTheme.of(context).labelLarge.override(
+                                                                                      fontFamily: FlutterFlowTheme.of(context).labelLargeFamily,
+                                                                                      letterSpacing: 0.0,
+                                                                                      useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).labelLargeFamily),
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                                Row(
+                                                                                  mainAxisSize: MainAxisSize.max,
+                                                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                                  children: [
+                                                                                    Container(
+                                                                                      decoration: BoxDecoration(
+                                                                                        borderRadius: BorderRadius.circular(16.0),
                                                                                       ),
-                                                                                      style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                            font: GoogleFonts.inter(
-                                                                                              fontWeight: FontWeight.w500,
-                                                                                              fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                      child: Padding(
+                                                                                        padding: EdgeInsetsDirectional.fromSTEB(8.0, 4.0, 8.0, 4.0),
+                                                                                        child: Text(
+                                                                                          valueOrDefault<String>(
+                                                                                            tasksWithDogsAndUsersV2Item.status == 'Completed'
+                                                                                                ? valueOrDefault<String>(
+                                                                                              tasksWithDogsAndUsersV2Item.dateCompleted,
+                                                                                              '-',
+                                                                                            )
+                                                                                                : valueOrDefault<String>(
+                                                                                              tasksWithDogsAndUsersV2Item.dateCreated,
+                                                                                              '-',
                                                                                             ),
+                                                                                            '-',
+                                                                                          ),
+                                                                                          style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                            fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
                                                                                             color: FlutterFlowTheme.of(context).success,
                                                                                             fontSize: 12.0,
                                                                                             letterSpacing: 0.0,
-                                                                                            fontWeight: FontWeight.w500,
-                                                                                            fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                            useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyMediumFamily),
                                                                                           ),
-                                                                                    ),
-                                                                                  ),
-                                                                                ),
-                                                                              ],
-                                                                            ),
-                                                                            Align(
-                                                                              alignment: AlignmentDirectional(1.0, 0.0),
-                                                                              child: Container(
-                                                                                decoration: BoxDecoration(
-                                                                                  color: Color(0xFF249689),
-                                                                                  borderRadius: BorderRadius.circular(16.0),
-                                                                                  border: Border.all(
-                                                                                    color: FlutterFlowTheme.of(context).success,
-                                                                                  ),
-                                                                                ),
-                                                                                child: Padding(
-                                                                                  padding: EdgeInsetsDirectional.fromSTEB(8.0, 4.0, 8.0, 4.0),
-                                                                                  child: Text(
-                                                                                    valueOrDefault<String>(
-                                                                                      tasksWithDogsAndUsersV2Item.status,
-                                                                                      '-',
-                                                                                    ),
-                                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                          font: GoogleFonts.inter(
-                                                                                            fontWeight: FontWeight.w500,
-                                                                                            fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                                          ),
-                                                                                          color: Colors.white,
-                                                                                          fontSize: 12.0,
-                                                                                          letterSpacing: 0.0,
-                                                                                          fontWeight: FontWeight.w500,
-                                                                                          fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                                        ),
-                                                                                  ),
-                                                                                ),
-                                                                              ),
-                                                                            ),
-
-                                                                            // You will have to add an action on this rich text to go to your login page.
-                                                                            Align(
-                                                                              alignment: AlignmentDirectional(1.0, 0.0),
-                                                                              child: Padding(
-                                                                                padding: EdgeInsetsDirectional.fromSTEB(8.0, 4.0, 8.0, 4.0),
-                                                                                child: RichText(
-                                                                                  textScaler: MediaQuery.of(context).textScaler,
-                                                                                  text: TextSpan(
-                                                                                    children: [
-                                                                                      TextSpan(
-                                                                                        text: 'Completed: ',
-                                                                                        style: TextStyle(
-                                                                                          fontWeight: FontWeight.w600,
-                                                                                          fontSize: 12.0,
                                                                                         ),
                                                                                       ),
-                                                                                      TextSpan(
-                                                                                        text: valueOrDefault<String>(
-                                                                                          tasksWithDogsAndUsersV2Item.dateCompleted,
+                                                                                    ),
+                                                                                  ],
+                                                                                ),
+                                                                                Align(
+                                                                                  alignment: AlignmentDirectional(1.0, 0.0),
+                                                                                  child: Container(
+                                                                                    decoration: BoxDecoration(
+                                                                                      color: Color(0xFF249689),
+                                                                                      borderRadius: BorderRadius.circular(16.0),
+                                                                                      border: Border.all(
+                                                                                        color: FlutterFlowTheme.of(context).success,
+                                                                                      ),
+                                                                                    ),
+                                                                                    child: Padding(
+                                                                                      padding: EdgeInsetsDirectional.fromSTEB(8.0, 4.0, 8.0, 4.0),
+                                                                                      child: Text(
+                                                                                        valueOrDefault<String>(
+                                                                                          tasksWithDogsAndUsersV2Item.status,
                                                                                           '-',
                                                                                         ),
                                                                                         style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                              font: GoogleFonts.plusJakartaSans(
-                                                                                                fontWeight: FontWeight.w600,
-                                                                                                fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                                              ),
-                                                                                              color: Color(0xFFFD8205),
-                                                                                              fontSize: 12.0,
-                                                                                              letterSpacing: 0.0,
-                                                                                              fontWeight: FontWeight.w600,
-                                                                                              fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                                            ),
-                                                                                      )
-                                                                                    ],
-                                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                          font: GoogleFonts.plusJakartaSans(
-                                                                                            fontWeight: FontWeight.w500,
-                                                                                            fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                                          ),
-                                                                                          color: Color(0xFF101213),
-                                                                                          fontSize: 14.0,
+                                                                                          fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
+                                                                                          color: Colors.white,
+                                                                                          fontSize: 12.0,
                                                                                           letterSpacing: 0.0,
-                                                                                          fontWeight: FontWeight.w500,
-                                                                                          fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                          useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyMediumFamily),
                                                                                         ),
+                                                                                      ),
+                                                                                    ),
                                                                                   ),
                                                                                 ),
-                                                                              ),
-                                                                            ),
-                                                                            Row(
-                                                                              mainAxisSize: MainAxisSize.max,
-                                                                              mainAxisAlignment: MainAxisAlignment.end,
-                                                                              children: [
-                                                                                // You will have to add an action on this rich text to go to your login page.
                                                                                 Align(
                                                                                   alignment: AlignmentDirectional(1.0, 0.0),
                                                                                   child: Padding(
@@ -1497,7 +1363,7 @@ class _DashboardAssignedTaskPageWidgetState
                                                                                       text: TextSpan(
                                                                                         children: [
                                                                                           TextSpan(
-                                                                                            text: 'Assigned from: ',
+                                                                                            text: 'Completed: ',
                                                                                             style: TextStyle(
                                                                                               fontWeight: FontWeight.w600,
                                                                                               fontSize: 12.0,
@@ -1505,108 +1371,138 @@ class _DashboardAssignedTaskPageWidgetState
                                                                                           ),
                                                                                           TextSpan(
                                                                                             text: valueOrDefault<String>(
-                                                                                              tasksWithDogsAndUsersV2Item.assignedByUser.userFullname,
+                                                                                              tasksWithDogsAndUsersV2Item.dateCompleted,
                                                                                               '-',
                                                                                             ),
                                                                                             style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                                  font: GoogleFonts.plusJakartaSans(
-                                                                                                    fontWeight: FontWeight.w600,
-                                                                                                    fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                                                  ),
-                                                                                                  color: Color(0xFFFD8205),
-                                                                                                  fontSize: 12.0,
-                                                                                                  letterSpacing: 0.0,
-                                                                                                  fontWeight: FontWeight.w600,
-                                                                                                  fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                                                ),
+                                                                                              fontFamily: 'Plus Jakarta Sans',
+                                                                                              color: Color(0xFFFD8205),
+                                                                                              fontSize: 12.0,
+                                                                                              letterSpacing: 0.0,
+                                                                                              fontWeight: FontWeight.w600,
+                                                                                              useGoogleFonts: GoogleFonts.asMap().containsKey('Plus Jakarta Sans'),
+                                                                                            ),
                                                                                           )
                                                                                         ],
                                                                                         style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                              font: GoogleFonts.plusJakartaSans(
-                                                                                                fontWeight: FontWeight.w500,
-                                                                                                fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                                              ),
-                                                                                              color: Color(0xFF101213),
-                                                                                              fontSize: 14.0,
-                                                                                              letterSpacing: 0.0,
-                                                                                              fontWeight: FontWeight.w500,
-                                                                                              fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                                            ),
+                                                                                          fontFamily: 'Plus Jakarta Sans',
+                                                                                          color: Color(0xFF101213),
+                                                                                          fontSize: 14.0,
+                                                                                          letterSpacing: 0.0,
+                                                                                          useGoogleFonts: GoogleFonts.asMap().containsKey('Plus Jakarta Sans'),
+                                                                                        ),
                                                                                       ),
                                                                                     ),
                                                                                   ),
                                                                                 ),
-                                                                              ],
-                                                                            ),
-                                                                            Row(
-                                                                              mainAxisSize: MainAxisSize.max,
-                                                                              mainAxisAlignment: MainAxisAlignment.end,
-                                                                              children: [
-                                                                                Container(
-                                                                                  decoration: BoxDecoration(
-                                                                                    borderRadius: BorderRadius.circular(16.0),
-                                                                                    border: Border.all(
-                                                                                      color: Color(0xFFFD8205),
-                                                                                      width: 1.0,
+                                                                                Row(
+                                                                                  mainAxisSize: MainAxisSize.max,
+                                                                                  mainAxisAlignment: MainAxisAlignment.end,
+                                                                                  children: [
+                                                                                    Align(
+                                                                                      alignment: AlignmentDirectional(1.0, 0.0),
+                                                                                      child: Padding(
+                                                                                        padding: EdgeInsetsDirectional.fromSTEB(8.0, 4.0, 8.0, 4.0),
+                                                                                        child: RichText(
+                                                                                          textScaler: MediaQuery.of(context).textScaler,
+                                                                                          text: TextSpan(
+                                                                                            children: [
+                                                                                              TextSpan(
+                                                                                                text: 'Assigned from: ',
+                                                                                                style: TextStyle(
+                                                                                                  fontWeight: FontWeight.w600,
+                                                                                                  fontSize: 12.0,
+                                                                                                ),
+                                                                                              ),
+                                                                                              TextSpan(
+                                                                                                text: valueOrDefault<String>(
+                                                                                                  tasksWithDogsAndUsersV2Item.assignedByUser.userFullname,
+                                                                                                  '-',
+                                                                                                ),
+                                                                                                style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                  fontFamily: 'Plus Jakarta Sans',
+                                                                                                  color: Color(0xFFFD8205),
+                                                                                                  fontSize: 12.0,
+                                                                                                  letterSpacing: 0.0,
+                                                                                                  fontWeight: FontWeight.w600,
+                                                                                                  useGoogleFonts: GoogleFonts.asMap().containsKey('Plus Jakarta Sans'),
+                                                                                                ),
+                                                                                              )
+                                                                                            ],
+                                                                                            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                              fontFamily: 'Plus Jakarta Sans',
+                                                                                              color: Color(0xFF101213),
+                                                                                              fontSize: 14.0,
+                                                                                              letterSpacing: 0.0,
+                                                                                              useGoogleFonts: GoogleFonts.asMap().containsKey('Plus Jakarta Sans'),
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                      ),
                                                                                     ),
-                                                                                  ),
-                                                                                  child:
-                                                                                      // You will have to add an action on this rich text to go to your login page.
+                                                                                  ],
+                                                                                ),
+                                                                                Row(
+                                                                                  mainAxisSize: MainAxisSize.max,
+                                                                                  mainAxisAlignment: MainAxisAlignment.end,
+                                                                                  children: [
+                                                                                    Container(
+                                                                                      decoration: BoxDecoration(
+                                                                                        borderRadius: BorderRadius.circular(16.0),
+                                                                                        border: Border.all(
+                                                                                          color: Color(0xFFFD8205),
+                                                                                          width: 1.0,
+                                                                                        ),
+                                                                                      ),
+                                                                                      child:
                                                                                       Padding(
-                                                                                    padding: EdgeInsetsDirectional.fromSTEB(8.0, 4.0, 8.0, 4.0),
-                                                                                    child: RichText(
-                                                                                      textScaler: MediaQuery.of(context).textScaler,
-                                                                                      text: TextSpan(
-                                                                                        children: [
-                                                                                          TextSpan(
-                                                                                            text: 'Assigned to: ',
-                                                                                            style: TextStyle(
-                                                                                              fontWeight: FontWeight.w600,
-                                                                                              fontSize: 12.0,
-                                                                                            ),
-                                                                                          ),
-                                                                                          TextSpan(
-                                                                                            text: valueOrDefault<String>(
-                                                                                              tasksWithDogsAndUsersV2Item.assignedToUser.userFullname,
-                                                                                              '-',
-                                                                                            ),
-                                                                                            style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                                  font: GoogleFonts.plusJakartaSans(
-                                                                                                    fontWeight: FontWeight.w600,
-                                                                                                    fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                                                  ),
+                                                                                        padding: EdgeInsetsDirectional.fromSTEB(8.0, 4.0, 8.0, 4.0),
+                                                                                        child: RichText(
+                                                                                          textScaler: MediaQuery.of(context).textScaler,
+                                                                                          text: TextSpan(
+                                                                                            children: [
+                                                                                              TextSpan(
+                                                                                                text: 'Assigned to: ',
+                                                                                                style: TextStyle(
+                                                                                                  fontWeight: FontWeight.w600,
+                                                                                                  fontSize: 12.0,
+                                                                                                ),
+                                                                                              ),
+                                                                                              TextSpan(
+                                                                                                text: valueOrDefault<String>(
+                                                                                                  tasksWithDogsAndUsersV2Item.assignedToUser.userFullname,
+                                                                                                  '-',
+                                                                                                ),
+                                                                                                style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                  fontFamily: 'Plus Jakarta Sans',
                                                                                                   color: Color(0xFFFD8205),
                                                                                                   fontSize: 12.0,
                                                                                                   letterSpacing: 0.0,
                                                                                                   fontWeight: FontWeight.w600,
-                                                                                                  fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                                  useGoogleFonts: GoogleFonts.asMap().containsKey('Plus Jakarta Sans'),
                                                                                                 ),
-                                                                                          )
-                                                                                        ],
-                                                                                        style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                              font: GoogleFonts.plusJakartaSans(
-                                                                                                fontWeight: FontWeight.w500,
-                                                                                                fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                                              ),
+                                                                                              )
+                                                                                            ],
+                                                                                            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                              fontFamily: 'Plus Jakarta Sans',
                                                                                               color: Color(0xFF101213),
                                                                                               fontSize: 14.0,
                                                                                               letterSpacing: 0.0,
-                                                                                              fontWeight: FontWeight.w500,
-                                                                                              fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                              useGoogleFonts: GoogleFonts.asMap().containsKey('Plus Jakarta Sans'),
                                                                                             ),
+                                                                                          ),
+                                                                                        ),
                                                                                       ),
                                                                                     ),
-                                                                                  ),
+                                                                                  ],
                                                                                 ),
-                                                                              ],
+                                                                              ].divide(SizedBox(height: 10.0)),
                                                                             ),
-                                                                          ].divide(SizedBox(height: 10.0)),
+                                                                          ),
                                                                         ),
                                                                       ),
                                                                     ),
                                                                   ),
-                                                                ),
-                                                              ),
                                                             ),
                                                           ],
                                                         ),
