@@ -430,147 +430,113 @@ class _TeamPageWidgetState extends State<TeamPageWidget> {
                                                         10.0,
                                                         20.0,
                                                         0.0),
-                                                    child: StreamBuilder<
-                                                        List<UsersRow>>(
-                                                      stream: _model
-                                                          .listViewSupabaseStream ??=
-                                                          SupaFlow.client
-                                                              .from("users")
-                                                              .stream(
-                                                              primaryKey: [
-                                                                'id'
-                                                              ])
-                                                              .order(
-                                                              'user_fullname',
-                                                              ascending:
-                                                              true)
-                                                              .map((list) => list
-                                                              .map((item) =>
-                                                              UsersRow(
-                                                                  item))
-                                                              .toList()),
-                                                      builder:
-                                                          (context, snapshot) {
-                                                        if (!snapshot.hasData) {
-                                                          return Center(
-                                                            child: SizedBox(
-                                                              width: 50.0,
-                                                              height: 50.0,
-                                                              child:
-                                                              CircularProgressIndicator(
-                                                                valueColor:
-                                                                AlwaysStoppedAnimation<
-                                                                    Color>(
-                                                                  FlutterFlowTheme.of(
-                                                                      context)
-                                                                      .primary,
+                                                      child: StreamBuilder<List<UsersRow>>(
+                                                        stream: _model
+                                                            .listViewSupabaseStream ??=
+                                                            SupaFlow.client
+                                                                .from("users")
+                                                                .stream(
+                                                                primaryKey: [
+                                                                  'id'
+                                                                ])
+                                                                .order(
+                                                                'user_fullname',
+                                                                ascending:
+                                                                true)
+                                                                .map((list) => list
+                                                                .map((item) =>
+                                                                UsersRow(
+                                                                    item))
+                                                                .toList()),
+                                                        builder:
+                                                            (context, snapshot) {
+                                                          if (!snapshot.hasData) {
+                                                            return Center(
+                                                              child: SizedBox(
+                                                                width: 50.0,
+                                                                height: 50.0,
+                                                                child:
+                                                                CircularProgressIndicator(
+                                                                  valueColor:
+                                                                  AlwaysStoppedAnimation<Color>(
+                                                                    FlutterFlowTheme.of(context).primary,
+                                                                  ),
                                                                 ),
                                                               ),
-                                                            ),
+                                                            );
+                                                          }
+                                                          List<UsersRow>
+                                                          allUsersRowList =
+                                                          snapshot.data!;
+
+                                                          final List<UsersRow> filteredUsersRowList =
+                                                          TeamFilterUtils.filterTeamMembers(
+                                                            allMembers: allUsersRowList,
+                                                            searchQuery: _searchQuery,
                                                           );
-                                                        }
-                                                        List<UsersRow>
-                                                        allUsersRowList =
-                                                        snapshot.data!;
 
-                                                        final List<UsersRow> filteredUsersRowList =
-                                                        TeamFilterUtils.filterTeamMembers(
-                                                          allMembers: allUsersRowList,
-                                                          searchQuery: _searchQuery,
-                                                        );
-
-                                                        if (filteredUsersRowList.isEmpty && _searchQuery.isNotEmpty) {
-                                                          return Padding(
-                                                            padding: const EdgeInsets.all(16.0),
-                                                            child: Center(
-                                                              child: Text(
-                                                                'No members found for "$_searchQuery"',
-                                                                style: FlutterFlowTheme.of(context).bodyMedium,
+                                                          if (filteredUsersRowList.isEmpty && _searchQuery.isNotEmpty) {
+                                                            return Padding(
+                                                              padding: const EdgeInsets.all(16.0),
+                                                              child: Center(
+                                                                child: Text(
+                                                                  'No members found for "$_searchQuery"',
+                                                                  style: FlutterFlowTheme.of(context).bodyMedium,
+                                                                ),
                                                               ),
-                                                            ),
-                                                          );
-                                                        } else if (filteredUsersRowList.isEmpty) {
-                                                          return Padding(
-                                                            padding: const EdgeInsets.all(16.0),
-                                                            child: Center(
-                                                              child: Text(
-                                                                'No members to display.',
-                                                                style: FlutterFlowTheme.of(context).bodyMedium,
+                                                            );
+                                                          } else if (filteredUsersRowList.isEmpty) {
+                                                            return Padding(
+                                                              padding: const EdgeInsets.all(16.0),
+                                                              child: Center(
+                                                                child: Text(
+                                                                  'No members to display.',
+                                                                  style: FlutterFlowTheme.of(context).bodyMedium,
+                                                                ),
                                                               ),
-                                                            ),
-                                                          );
-                                                        }
+                                                            );
+                                                          }
 
-                                                        return ListView.builder(
-                                                          padding:
-                                                          EdgeInsets.zero,
-                                                          shrinkWrap: true,
-                                                          scrollDirection:
-                                                          Axis.vertical,
-                                                          itemCount:
-                                                          filteredUsersRowList
-                                                              .length,
-                                                          itemBuilder: (context,
-                                                              listViewIndex) {
-                                                            final listViewUsersRow =
-                                                            filteredUsersRowList[
-                                                            listViewIndex];
-                                                            return SingleChildScrollView(
-                                                              child: Column(
-                                                                mainAxisSize:
-                                                                MainAxisSize
-                                                                    .max,
+                                                          return ListView.builder(
+                                                            padding: EdgeInsets.zero,
+                                                            shrinkWrap: true, // This is okay because it's inside a SingleChildScrollView bounded by a fixed height container
+                                                            physics: ClampingScrollPhysics(), // Often better with shrinkWrap if parent scrolls
+                                                            scrollDirection: Axis.vertical,
+                                                            itemCount: filteredUsersRowList.length,
+                                                            itemBuilder: (context, listViewIndex) {
+                                                              final listViewUsersRow = filteredUsersRowList[listViewIndex];
+                                                              // REMOVED SingleChildScrollView from here
+                                                              return Column( // This Column directly returns the item's content
+                                                                mainAxisSize: MainAxisSize.max,
                                                                 children: [
                                                                   Padding(
-                                                                    padding: EdgeInsetsDirectional
-                                                                        .fromSTEB(
+                                                                    padding: EdgeInsetsDirectional.fromSTEB(
                                                                         0.0,
-                                                                        0.0,
+                                                                        0.0, // Adjusted padding if needed, or keep as is
                                                                         0.0,
                                                                         10.0),
-                                                                    child:
-                                                                    Container(
-                                                                      width: double
-                                                                          .infinity,
-                                                                      height:
-                                                                      54.0,
-                                                                      decoration:
-                                                                      BoxDecoration(
-                                                                        color: Colors
-                                                                            .white,
+                                                                    child: Container(
+                                                                      width: double.infinity,
+                                                                      height: 54.0,
+                                                                      decoration: BoxDecoration(
+                                                                        color: Colors.white,
                                                                         boxShadow: [
                                                                           BoxShadow(
-                                                                            blurRadius:
-                                                                            4.0,
-                                                                            color:
-                                                                            Color(0x33000000),
-                                                                            offset:
-                                                                            Offset(
-                                                                              0.0,
-                                                                              2.0,
-                                                                            ),
+                                                                            blurRadius: 4.0,
+                                                                            color: Color(0x33000000),
+                                                                            offset: Offset(0.0, 2.0,),
                                                                           )
                                                                         ],
-                                                                        borderRadius:
-                                                                        BorderRadius.circular(16.0),
+                                                                        borderRadius: BorderRadius.circular(16.0),
                                                                       ),
-                                                                      child:
-                                                                      Align(
-                                                                        alignment: AlignmentDirectional(
-                                                                            -1.0,
-                                                                            -1.0),
-                                                                        child:
-                                                                        Padding(
-                                                                          padding:
-                                                                          EdgeInsets.all(8.0),
-                                                                          child:
-                                                                          Row(
-                                                                            mainAxisSize:
-                                                                            MainAxisSize.max,
-                                                                            mainAxisAlignment:
-                                                                            MainAxisAlignment.spaceBetween,
-                                                                            children:
-                                                                            [
+                                                                      child: Align(
+                                                                        alignment: AlignmentDirectional(-1.0, -1.0), // This alignment might make content appear at the top
+                                                                        child: Padding(
+                                                                          padding: EdgeInsets.all(8.0),
+                                                                          child: Row(
+                                                                            mainAxisSize: MainAxisSize.max,
+                                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                            children: [
                                                                               Align(
                                                                                 alignment: AlignmentDirectional(-1.0, 0.0),
                                                                                 child: Padding(
@@ -606,7 +572,6 @@ class _TeamPageWidgetState extends State<TeamPageWidget> {
                                                                                     _model.apiResult8qn = await GetConversationCall.call(
                                                                                       accessToken: FFAppState().accessToken,
                                                                                     );
-
                                                                                     await showDialog(
                                                                                       context: context,
                                                                                       builder: (dialogContext) {
@@ -649,13 +614,11 @@ class _TeamPageWidgetState extends State<TeamPageWidget> {
                                                                     ),
                                                                   ),
                                                                 ],
-                                                              ),
-                                                            );
-                                                          },
-                                                        );
-                                                      },
-                                                    ),
-                                                  ),
+                                                              );
+                                                            },
+                                                          );
+                                                        },
+                                                      )                                                  ),
                                                 ],
                                               ),
                                             ),
