@@ -1,3 +1,5 @@
+import 'package:paw_fect_care/utils/team_filter_utils.dart';
+
 import '/backend/api_requests/api_calls.dart';
 import '/backend/supabase/supabase.dart';
 import '/components/bottom_navigation_bar/bottom_navigation_bar_widget.dart';
@@ -28,19 +30,29 @@ class _TeamPageWidgetState extends State<TeamPageWidget> {
   late TeamPageModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
 
   @override
   void initState() {
     super.initState();
     _model = createModel(context, () => TeamPageModel());
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
+    _searchController.addListener(() {
+      if (mounted) {
+        setState(() {
+          _searchQuery = _searchController.text;
+        });
+      }
+    });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override
   void dispose() {
+    _searchController.dispose();
     _model.dispose();
-
     super.dispose();
   }
 
@@ -97,16 +109,16 @@ class _TeamPageWidgetState extends State<TeamPageWidget> {
                                   child: Row(
                                     mainAxisSize: MainAxisSize.max,
                                     mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    CrossAxisAlignment.start,
                                     children: [
                                       Padding(
                                         padding: EdgeInsetsDirectional.fromSTEB(
                                             10.0, 0.0, 0.0, 0.0),
                                         child: ClipRRect(
                                           borderRadius:
-                                              BorderRadius.circular(8.0),
+                                          BorderRadius.circular(8.0),
                                           child: Image.asset(
                                             'assets/images/logo_transparent.png',
                                             width: 100.0,
@@ -117,11 +129,11 @@ class _TeamPageWidgetState extends State<TeamPageWidget> {
                                       ),
                                       Align(
                                         alignment:
-                                            AlignmentDirectional(0.0, -1.0),
+                                        AlignmentDirectional(0.0, -1.0),
                                         child: Padding(
                                           padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  0.0, 25.0, 15.0, 0.0),
+                                          EdgeInsetsDirectional.fromSTEB(
+                                              0.0, 25.0, 15.0, 0.0),
                                           child: Icon(
                                             Icons.notifications_sharp,
                                             color: FlutterFlowTheme.of(context)
@@ -175,7 +187,7 @@ class _TeamPageWidgetState extends State<TeamPageWidget> {
                                           child: Row(
                                             mainAxisSize: MainAxisSize.max,
                                             mainAxisAlignment:
-                                                MainAxisAlignment.center,
+                                            MainAxisAlignment.center,
                                             children: [
                                               Align(
                                                 alignment: AlignmentDirectional(
@@ -183,7 +195,7 @@ class _TeamPageWidgetState extends State<TeamPageWidget> {
                                                 child: Icon(
                                                   Icons.groups_2_sharp,
                                                   color: FlutterFlowTheme.of(
-                                                          context)
+                                                      context)
                                                       .success,
                                                   size: 30.0,
                                                 ),
@@ -194,39 +206,15 @@ class _TeamPageWidgetState extends State<TeamPageWidget> {
                                                 child: Text(
                                                   'Team Page',
                                                   style: FlutterFlowTheme.of(
-                                                          context)
+                                                      context)
                                                       .titleMedium
                                                       .override(
-                                                        font: GoogleFonts
-                                                            .interTight(
-                                                          fontWeight:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .titleMedium
-                                                                  .fontWeight,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .titleMedium
-                                                                  .fontStyle,
-                                                        ),
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .success,
-                                                        fontSize: 22.0,
-                                                        letterSpacing: 0.0,
-                                                        fontWeight:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .titleMedium
-                                                                .fontWeight,
-                                                        fontStyle:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .titleMedium
-                                                                .fontStyle,
-                                                      ),
+                                                    fontFamily: FlutterFlowTheme.of(context).titleMediumFamily,
+                                                    color: FlutterFlowTheme.of(context).success,
+                                                    fontSize: 22.0,
+                                                    letterSpacing: 0.0,
+                                                    useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).titleMediumFamily),
+                                                  ),
                                                 ),
                                               ),
                                               Align(
@@ -235,7 +223,7 @@ class _TeamPageWidgetState extends State<TeamPageWidget> {
                                                 child: Icon(
                                                   Icons.groups_2_sharp,
                                                   color: FlutterFlowTheme.of(
-                                                          context)
+                                                      context)
                                                       .success,
                                                   size: 30.0,
                                                 ),
@@ -245,73 +233,63 @@ class _TeamPageWidgetState extends State<TeamPageWidget> {
                                         ),
                                         Padding(
                                           padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  20.0, 0.0, 20.0, 0.0),
+                                          EdgeInsetsDirectional.fromSTEB(
+                                              15.0, 15.0, 15.0, 10.0),
                                           child: Container(
                                             width: double.infinity,
-                                            height: 43.0,
+                                            height: 45.0,
                                             decoration: BoxDecoration(
                                               color: Colors.white,
                                               boxShadow: [
                                                 BoxShadow(
                                                   blurRadius: 4.0,
                                                   color: Color(0x33000000),
-                                                  offset: Offset(
-                                                    0.0,
-                                                    2.0,
-                                                  ),
+                                                  offset: Offset(0.0, 2.0),
                                                 )
                                               ],
                                               borderRadius:
-                                                  BorderRadius.circular(16.0),
+                                              BorderRadius.circular(16.0),
                                             ),
                                             child: Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(
-                                                      20.0, 0.0, 20.0, 0.0),
+                                              padding: EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 5.0, 0.0),
                                               child: Row(
                                                 mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
                                                 children: [
-                                                  Text(
-                                                    'Search...',
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .bodyMedium
-                                                        .override(
-                                                          font:
-                                                              GoogleFonts.inter(
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                          color: Colors.black,
+                                                  Expanded(
+                                                    child: TextField(
+                                                      controller: _searchController,
+                                                      obscureText: false,
+                                                      decoration: InputDecoration(
+                                                        hintText: 'Search members...',
+                                                        hintStyle: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                          fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
+                                                          color: Colors.grey, // Typically used for hints
                                                           letterSpacing: 0.0,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMedium
-                                                                  .fontStyle,
+                                                          useGoogleFonts: GoogleFonts.asMap().containsKey(
+                                                            FlutterFlowTheme.of(context).bodyMediumFamily,
+                                                          ),
                                                         ),
+                                                        enabledBorder: InputBorder.none,
+                                                        focusedBorder: InputBorder.none,
+                                                        filled: true,
+                                                        fillColor: Colors.white,
+                                                      ),
+                                                      style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                        fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
+                                                        color: Colors.black, // <-- Make sure this is visible
+                                                        fontSize: 16.0,       // Optional: increase font size for clarity
+                                                        letterSpacing: 0.0,
+                                                        useGoogleFonts: GoogleFonts.asMap().containsKey(
+                                                          FlutterFlowTheme.of(context).bodyMediumFamily,
+                                                        ),
+                                                      ),
+                                                    ),
                                                   ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            1.0, 0.0),
+                                                  Padding(
+                                                    padding: EdgeInsetsDirectional.fromSTEB(8.0, 0.0, 0.0, 0.0),
                                                     child: Icon(
                                                       Icons.search_outlined,
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .success,
+                                                      color: FlutterFlowTheme.of(context).success,
                                                       size: 24.0,
                                                     ),
                                                   ),
@@ -322,42 +300,29 @@ class _TeamPageWidgetState extends State<TeamPageWidget> {
                                         ),
                                         Align(
                                           alignment:
-                                              AlignmentDirectional(-1.0, 0.0),
+                                          AlignmentDirectional(-1.0, 0.0),
                                           child: Padding(
                                             padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    25.0, 20.0, 0.0, 0.0),
+                                            EdgeInsetsDirectional.fromSTEB(
+                                                25.0, 20.0, 0.0, 0.0),
                                             child: Text(
                                               'Myself',
                                               style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyMedium
-                                                      .override(
-                                                        font: GoogleFonts.inter(
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMedium
-                                                                  .fontStyle,
-                                                        ),
-                                                        letterSpacing: 0.0,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        fontStyle:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyMedium
-                                                                .fontStyle,
-                                                      ),
+                                              FlutterFlowTheme.of(context)
+                                                  .bodyMedium
+                                                  .override(
+                                                fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
+                                                letterSpacing: 0.0,
+                                                fontWeight: FontWeight.w600,
+                                                useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyMediumFamily),
+                                              ),
                                             ),
                                           ),
                                         ),
                                         Padding(
                                           padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  20.0, 10.0, 20.0, 0.0),
+                                          EdgeInsetsDirectional.fromSTEB(
+                                              20.0, 10.0, 20.0, 0.0),
                                           child: Container(
                                             width: double.infinity,
                                             height: 54.0,
@@ -374,7 +339,7 @@ class _TeamPageWidgetState extends State<TeamPageWidget> {
                                                 )
                                               ],
                                               borderRadius:
-                                                  BorderRadius.circular(16.0),
+                                              BorderRadius.circular(16.0),
                                             ),
                                             child: Align(
                                               alignment: AlignmentDirectional(
@@ -383,55 +348,37 @@ class _TeamPageWidgetState extends State<TeamPageWidget> {
                                                 padding: EdgeInsets.all(8.0),
                                                 child: Row(
                                                   mainAxisSize:
-                                                      MainAxisSize.max,
+                                                  MainAxisSize.max,
                                                   mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                                   children: [
                                                     Expanded(
                                                       child: Padding(
                                                         padding:
-                                                            EdgeInsetsDirectional
-                                                                .fromSTEB(
-                                                                    0.0,
-                                                                    10.0,
-                                                                    10.0,
-                                                                    10.0),
+                                                        EdgeInsetsDirectional
+                                                            .fromSTEB(
+                                                            0.0,
+                                                            10.0,
+                                                            10.0,
+                                                            10.0),
                                                         child: Container(
                                                           decoration:
-                                                              BoxDecoration(),
+                                                          BoxDecoration(),
                                                           child: Text(
                                                             FFAppState()
                                                                 .userName,
                                                             style: FlutterFlowTheme
-                                                                    .of(context)
+                                                                .of(context)
                                                                 .bodyMedium
                                                                 .override(
-                                                                  font:
-                                                                      GoogleFonts
-                                                                          .inter(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w500,
-                                                                    fontStyle: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .bodyMedium
-                                                                        .fontStyle,
-                                                                  ),
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontSize:
-                                                                      12.0,
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                                ),
+                                                              fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
+                                                              color: Colors.black,
+                                                              fontSize: 12.0,
+                                                              letterSpacing: 0.0,
+                                                              fontWeight: FontWeight.w500,
+                                                              useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyMediumFamily),
+                                                            ),
                                                           ),
                                                         ),
                                                       ),
@@ -445,35 +392,22 @@ class _TeamPageWidgetState extends State<TeamPageWidget> {
                                         ),
                                         Align(
                                           alignment:
-                                              AlignmentDirectional(-1.0, 0.0),
+                                          AlignmentDirectional(-1.0, 0.0),
                                           child: Padding(
                                             padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    25.0, 20.0, 0.0, 0.0),
+                                            EdgeInsetsDirectional.fromSTEB(
+                                                25.0, 20.0, 0.0, 0.0),
                                             child: Text(
                                               'Members',
                                               style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyMedium
-                                                      .override(
-                                                        font: GoogleFonts.inter(
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMedium
-                                                                  .fontStyle,
-                                                        ),
-                                                        letterSpacing: 0.0,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        fontStyle:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyMedium
-                                                                .fontStyle,
-                                                      ),
+                                              FlutterFlowTheme.of(context)
+                                                  .bodyMedium
+                                                  .override(
+                                                fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
+                                                letterSpacing: 0.0,
+                                                fontWeight: FontWeight.w600,
+                                                useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyMediumFamily),
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -482,54 +416,53 @@ class _TeamPageWidgetState extends State<TeamPageWidget> {
                                           decoration: BoxDecoration(),
                                           child: Padding(
                                             padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 0.0, 0.0, 20.0),
+                                            EdgeInsetsDirectional.fromSTEB(
+                                                0.0, 0.0, 0.0, 20.0),
                                             child: SingleChildScrollView(
                                               child: Column(
                                                 mainAxisSize: MainAxisSize.max,
                                                 children: [
                                                   Padding(
                                                     padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(
-                                                                20.0,
-                                                                10.0,
-                                                                20.0,
-                                                                0.0),
+                                                    EdgeInsetsDirectional
+                                                        .fromSTEB(
+                                                        20.0,
+                                                        10.0,
+                                                        20.0,
+                                                        0.0),
                                                     child: StreamBuilder<
                                                         List<UsersRow>>(
                                                       stream: _model
-                                                              .listViewSupabaseStream ??=
+                                                          .listViewSupabaseStream ??=
                                                           SupaFlow.client
                                                               .from("users")
                                                               .stream(
-                                                                  primaryKey: [
-                                                                    'id'
-                                                                  ])
+                                                              primaryKey: [
+                                                                'id'
+                                                              ])
                                                               .order(
-                                                                  'user_fullname',
-                                                                  ascending:
-                                                                      true)
+                                                              'user_fullname',
+                                                              ascending:
+                                                              true)
                                                               .map((list) => list
-                                                                  .map((item) =>
-                                                                      UsersRow(
-                                                                          item))
-                                                                  .toList()),
+                                                              .map((item) =>
+                                                              UsersRow(
+                                                                  item))
+                                                              .toList()),
                                                       builder:
                                                           (context, snapshot) {
-                                                        // Customize what your widget looks like when it's loading.
                                                         if (!snapshot.hasData) {
                                                           return Center(
                                                             child: SizedBox(
                                                               width: 50.0,
                                                               height: 50.0,
                                                               child:
-                                                                  CircularProgressIndicator(
+                                                              CircularProgressIndicator(
                                                                 valueColor:
-                                                                    AlwaysStoppedAnimation<
-                                                                        Color>(
+                                                                AlwaysStoppedAnimation<
+                                                                    Color>(
                                                                   FlutterFlowTheme.of(
-                                                                          context)
+                                                                      context)
                                                                       .primary,
                                                                 ),
                                                               ),
@@ -537,79 +470,107 @@ class _TeamPageWidgetState extends State<TeamPageWidget> {
                                                           );
                                                         }
                                                         List<UsersRow>
-                                                            listViewUsersRowList =
-                                                            snapshot.data!;
+                                                        allUsersRowList =
+                                                        snapshot.data!;
+
+                                                        final List<UsersRow> filteredUsersRowList =
+                                                        TeamFilterUtils.filterTeamMembers(
+                                                          allMembers: allUsersRowList,
+                                                          searchQuery: _searchQuery,
+                                                        );
+
+                                                        if (filteredUsersRowList.isEmpty && _searchQuery.isNotEmpty) {
+                                                          return Padding(
+                                                            padding: const EdgeInsets.all(16.0),
+                                                            child: Center(
+                                                              child: Text(
+                                                                'No members found for "$_searchQuery"',
+                                                                style: FlutterFlowTheme.of(context).bodyMedium,
+                                                              ),
+                                                            ),
+                                                          );
+                                                        } else if (filteredUsersRowList.isEmpty) {
+                                                          return Padding(
+                                                            padding: const EdgeInsets.all(16.0),
+                                                            child: Center(
+                                                              child: Text(
+                                                                'No members to display.',
+                                                                style: FlutterFlowTheme.of(context).bodyMedium,
+                                                              ),
+                                                            ),
+                                                          );
+                                                        }
 
                                                         return ListView.builder(
                                                           padding:
-                                                              EdgeInsets.zero,
+                                                          EdgeInsets.zero,
                                                           shrinkWrap: true,
                                                           scrollDirection:
-                                                              Axis.vertical,
+                                                          Axis.vertical,
                                                           itemCount:
-                                                              listViewUsersRowList
-                                                                  .length,
+                                                          filteredUsersRowList
+                                                              .length,
                                                           itemBuilder: (context,
                                                               listViewIndex) {
                                                             final listViewUsersRow =
-                                                                listViewUsersRowList[
-                                                                    listViewIndex];
+                                                            filteredUsersRowList[
+                                                            listViewIndex];
                                                             return SingleChildScrollView(
                                                               child: Column(
                                                                 mainAxisSize:
-                                                                    MainAxisSize
-                                                                        .max,
+                                                                MainAxisSize
+                                                                    .max,
                                                                 children: [
                                                                   Padding(
                                                                     padding: EdgeInsetsDirectional
                                                                         .fromSTEB(
-                                                                            0.0,
-                                                                            0.0,
-                                                                            0.0,
-                                                                            10.0),
+                                                                        0.0,
+                                                                        0.0,
+                                                                        0.0,
+                                                                        10.0),
                                                                     child:
-                                                                        Container(
+                                                                    Container(
                                                                       width: double
                                                                           .infinity,
                                                                       height:
-                                                                          54.0,
+                                                                      54.0,
                                                                       decoration:
-                                                                          BoxDecoration(
+                                                                      BoxDecoration(
                                                                         color: Colors
                                                                             .white,
                                                                         boxShadow: [
                                                                           BoxShadow(
                                                                             blurRadius:
-                                                                                4.0,
+                                                                            4.0,
                                                                             color:
-                                                                                Color(0x33000000),
+                                                                            Color(0x33000000),
                                                                             offset:
-                                                                                Offset(
+                                                                            Offset(
                                                                               0.0,
                                                                               2.0,
                                                                             ),
                                                                           )
                                                                         ],
                                                                         borderRadius:
-                                                                            BorderRadius.circular(16.0),
+                                                                        BorderRadius.circular(16.0),
                                                                       ),
                                                                       child:
-                                                                          Align(
+                                                                      Align(
                                                                         alignment: AlignmentDirectional(
                                                                             -1.0,
                                                                             -1.0),
                                                                         child:
-                                                                            Padding(
+                                                                        Padding(
                                                                           padding:
-                                                                              EdgeInsets.all(8.0),
+                                                                          EdgeInsets.all(8.0),
                                                                           child:
-                                                                              Row(
+                                                                          Row(
                                                                             mainAxisSize:
-                                                                                MainAxisSize.max,
+                                                                            MainAxisSize.max,
                                                                             mainAxisAlignment:
-                                                                                MainAxisAlignment.spaceBetween,
+                                                                            MainAxisAlignment.spaceBetween,
                                                                             children:
-                                                                                [
+                                                                            [
                                                                               Align(
                                                                                 alignment: AlignmentDirectional(-1.0, 0.0),
                                                                                 child: Padding(
@@ -626,15 +587,11 @@ class _TeamPageWidgetState extends State<TeamPageWidget> {
                                                                                       ),
                                                                                       textAlign: TextAlign.start,
                                                                                       style: FlutterFlowTheme.of(context).labelLarge.override(
-                                                                                            font: GoogleFonts.inter(
-                                                                                              fontWeight: FlutterFlowTheme.of(context).labelLarge.fontWeight,
-                                                                                              fontStyle: FlutterFlowTheme.of(context).labelLarge.fontStyle,
-                                                                                            ),
-                                                                                            fontSize: 12.0,
-                                                                                            letterSpacing: 0.0,
-                                                                                            fontWeight: FlutterFlowTheme.of(context).labelLarge.fontWeight,
-                                                                                            fontStyle: FlutterFlowTheme.of(context).labelLarge.fontStyle,
-                                                                                          ),
+                                                                                        fontFamily: FlutterFlowTheme.of(context).labelLargeFamily,
+                                                                                        fontSize: 12.0,
+                                                                                        letterSpacing: 0.0,
+                                                                                        useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).labelLargeFamily),
+                                                                                      ),
                                                                                     ),
                                                                                   ),
                                                                                 ),
@@ -671,8 +628,7 @@ class _TeamPageWidgetState extends State<TeamPageWidget> {
                                                                                         );
                                                                                       },
                                                                                     );
-
-                                                                                    safeSetState(() {});
+                                                                                    setState(() {});
                                                                                   },
                                                                                   child: Icon(
                                                                                     Icons.message,
@@ -683,7 +639,7 @@ class _TeamPageWidgetState extends State<TeamPageWidget> {
                                                                               ),
                                                                               if (FFAppState().usertype == 'Admin')
                                                                                 DropdownStatusComponentWidget(
-                                                                                  key: Key('Keyn8x_${listViewIndex}_of_${listViewUsersRowList.length}'),
+                                                                                  key: Key('Keyn8x_${listViewIndex}_of_${filteredUsersRowList.length}'),
                                                                                   users: listViewUsersRow,
                                                                                 ),
                                                                             ].divide(SizedBox(width: 10.0)),
@@ -718,7 +674,7 @@ class _TeamPageWidgetState extends State<TeamPageWidget> {
                         alignment: AlignmentDirectional(0.0, 1.0),
                         child: wrapWithModel(
                           model: _model.bottomNavigationBarModel,
-                          updateCallback: () => safeSetState(() {}),
+                          updateCallback: () => setState(() {}),
                           child: BottomNavigationBarWidget(),
                         ),
                       ),
